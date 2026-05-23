@@ -1,0 +1,6 @@
+{
+  "name": "Control de Despacho de Litio",
+  "description": "Tablero ejecutivo y elegante de despacho y logística de litio para presentación a la gerencia de la compañía, alimentado mediante cargas de archivos Excel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
