@@ -38,6 +38,8 @@ export default function App() {
   const summary = useMemo(() => {
     const baseSummary = computeSummaryForDate(logs, selectedDate);
     if (isCustomFileLoaded && excelOverrides) {
+      const overridenLceActualTotal = excelOverrides.lceActualTotal !== undefined ? excelOverrides.lceActualTotal : baseSummary.lceActualTotal;
+      const overridenLceCumplimiento = baseSummary.lceProgramadoTotal > 0 ? (overridenLceActualTotal / baseSummary.lceProgramadoTotal) * 100 : 0;
       return {
         ...baseSummary,
         tonelajeDespachadoAcumulado: excelOverrides.tonelajeAcumulado !== undefined ? excelOverrides.tonelajeAcumulado : baseSummary.tonelajeDespachadoAcumulado,
@@ -47,6 +49,8 @@ export default function App() {
         cantidadCamiones: excelOverrides.cantidadCamiones !== undefined ? excelOverrides.cantidadCamiones : baseSummary.cantidadCamiones,
         viajesDespachadosAcumulados: excelOverrides.cantidadCamiones !== undefined ? excelOverrides.cantidadCamiones : baseSummary.viajesDespachadosAcumulados,
         productividadMes: excelOverrides.productividadMes !== undefined ? excelOverrides.productividadMes : baseSummary.productividadMes,
+        lceActualTotal: overridenLceActualTotal,
+        lceCumplimiento: overridenLceCumplimiento,
       };
     }
     return baseSummary;
