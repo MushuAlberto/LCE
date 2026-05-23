@@ -61,7 +61,6 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
       day: new Date(log.fecha + "T00:00:00").getDate(),
       name: formatShortDateSpanish(log.fecha),
       "LCE Actual (SdA)": log.lceActual,
-      "Meta LCE Diario": log.lceProgramado,
       isActive: log.fecha === selectedDate,
     };
   });
@@ -187,7 +186,7 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
             </p>
           </div>
           <span className="text-[9px] bg-[#3FAA88]/5 text-[#3FAA88] border border-[#3FAA88]/15 px-2 py-0.5 rounded font-mono uppercase tracking-widest font-bold">
-            Meta vs Logrado
+            LCE (SdA)
           </span>
         </div>
 
@@ -237,17 +236,6 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
                 fill="url(#bar2Grad)"
                 name="LCE (SdA)"
                 radius={[3, 3, 0, 0]}
-              />
-
-              {/* Constant or variable Target Line for LCE */}
-              <Line
-                type="step"
-                dataKey="Meta LCE Diario"
-                stroke="#171717"
-                strokeWidth={1.5}
-                dot={false}
-                name="Meta LCE Diario"
-                strokeDasharray="4 4"
               />
             </ComposedChart>
           </ResponsiveContainer>
