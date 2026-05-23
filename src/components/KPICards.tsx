@@ -84,11 +84,11 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
           </div>
 
           {/* TRUCK SVG WITH LIQUID brine level reflecting actual dispatch compliance */}
-          <div className="w-full h-24 my-3 bg-[#0A0A0A] rounded-xl relative flex items-center justify-center p-2 overflow-hidden border border-white/10">
+          <div className="w-full h-32 my-3 bg-[#0A0A0A] rounded-xl relative flex items-center justify-center p-2 overflow-hidden border border-white/10">
             {/* Ambient chemical background glow */}
             <div className="absolute -inset-1 opacity-5 bg-gradient-to-r from-blue-700 to-indigo-500 blur-xl animate-pulse" />
             
-            <svg viewBox="0 0 160 70" className="w-36 h-20 relative z-10">
+            <svg viewBox="0 0 160 70" className="w-full max-w-[220px] h-24 relative z-10">
               {/* Ground road line */}
               <line x1="5" y1="58" x2="155" y2="58" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1.5" strokeDasharray="3 3" />
               
@@ -124,8 +124,8 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
                 />
               </g>
 
-              {/* Tank labels */}
-              <text x="65" y="38" fill="#F0F0F0" fontSize="8.5" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+              {/* Tank labels - enlarged font size for superior readability */}
+              <text x="65" y="38.5" fill="#F0F0F0" fontSize="11.5" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
                 {numFmt(currentLog.toneladasDespachadas, 1)} t
               </text>
               
