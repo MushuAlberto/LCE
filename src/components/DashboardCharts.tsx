@@ -172,6 +172,67 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
             </ComposedChart>
           </ResponsiveContainer>
         </div>
+
+        {/* Detailed Data Table for Daily Trips */}
+        <div className="mt-4 pt-4 border-t border-nucleo/5">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-bold tracking-wider text-tecnico/60 uppercase font-mono">
+              Valores Diarios (Vueltas)
+            </span>
+            <span className="text-[9px] text-[#461D77] font-semibold font-sans bg-[#461D77]/5 px-2 py-0.5 rounded">
+              Desfase mensual
+            </span>
+          </div>
+          <div className="border border-nucleo/10 rounded-lg overflow-hidden bg-white">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-[#461D77]/5 sticky top-0 backdrop-blur-md z-12">
+                  <tr className="border-b border-nucleo/10">
+                    <th className="px-3 py-2 text-[9px] font-bold text-[#461D77] font-mono tracking-wider uppercase">Día / Fecha</th>
+                    <th className="px-3 py-2 text-[9px] font-bold text-[#461D77] font-mono tracking-wider uppercase text-right">Vueltas Prog.</th>
+                    <th className="px-3 py-2 text-[9px] font-bold text-[#461D77] font-mono tracking-wider uppercase text-right">Vueltas Desp.</th>
+                    <th className="px-3 py-2 text-[9px] font-bold text-[#461D77] font-mono tracking-wider uppercase text-right">Desviación</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-nucleo/5">
+                  {logs.map((log) => {
+                    const isSelected = log.fecha === selectedDate;
+                    const diff = log.viajesRealizados - log.viajesProgramados;
+                    const formattedDiff = diff > 0 ? `+${diff}` : `${diff}`;
+                    const dayNum = new Date(log.fecha + "T00:00:00").getDate();
+                    
+                    return (
+                      <tr 
+                        key={log.fecha} 
+                        className={`transition-colors text-xs ${
+                          isSelected 
+                            ? "bg-[#461D77]/10 font-bold hover:bg-[#461D77]/15" 
+                            : "hover:bg-nucleo/5 odd:bg-calido/10"
+                        }`}
+                      >
+                        <td className="px-3 py-1.5 text-tecnico">
+                          <span className="font-mono font-bold mr-1">{String(dayNum).padStart(2, "0")}</span>
+                          <span className="text-[10px] text-tecnico/50">({formatShortDateSpanish(log.fecha)})</span>
+                        </td>
+                        <td className="px-3 py-1.5 text-tecnico/70 text-right font-mono">
+                          {log.viajesProgramados}
+                        </td>
+                        <td className="px-3 py-1.5 text-nucleo text-right font-mono">
+                          {log.viajesRealizados}
+                        </td>
+                        <td className={`px-3 py-1.5 text-right font-mono font-bold ${
+                          diff >= 0 ? "text-ionizado" : "text-rose-500"
+                        }`}>
+                          {formattedDiff}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* CHART 2: LCE SdA (Diario) */}
@@ -239,6 +300,67 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
               />
             </ComposedChart>
           </ResponsiveContainer>
+        </div>
+
+        {/* Detailed Data Table for LCE Diario */}
+        <div className="mt-4 pt-4 border-t border-nucleo/5">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-bold tracking-wider text-tecnico/60 uppercase font-mono">
+              Valores Diarios (LCE)
+            </span>
+            <span className="text-[9px] text-[#3FAA88] font-semibold font-sans bg-[#3FAA88]/5 px-2 py-0.5 rounded">
+              Carbonato de Litio t
+            </span>
+          </div>
+          <div className="border border-nucleo/10 rounded-lg overflow-hidden bg-white">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-[#3FAA88]/5 sticky top-0 backdrop-blur-md z-12">
+                  <tr className="border-b border-nucleo/10">
+                    <th className="px-3 py-2 text-[9px] font-bold text-[#3FAA88] font-mono tracking-wider uppercase">Día / Fecha</th>
+                    <th className="px-3 py-2 text-[9px] font-bold text-[#3FAA88] font-mono tracking-wider uppercase text-right flex-1">LCE Actual (SdA)</th>
+                    <th className="px-3 py-2 text-[9px] font-bold text-[#3FAA88] font-mono tracking-wider uppercase text-right">Meta LCE</th>
+                    <th className="px-3 py-2 text-[9px] font-bold text-[#3FAA88] font-mono tracking-wider uppercase text-right">Cumplimiento</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-nucleo/5">
+                  {logs.map((log) => {
+                    const isSelected = log.fecha === selectedDate;
+                    const lceTarget = log.lceProgramado;
+                    const pct = lceTarget > 0 ? (log.lceActual / lceTarget) * 100 : 0;
+                    const dayNum = new Date(log.fecha + "T00:00:00").getDate();
+
+                    return (
+                      <tr 
+                        key={log.fecha} 
+                        className={`transition-colors text-xs ${
+                          isSelected 
+                            ? "bg-[#3FAA88]/10 font-bold hover:bg-[#3FAA88]/15" 
+                            : "hover:bg-nucleo/5 odd:bg-calido/10"
+                        }`}
+                      >
+                        <td className="px-3 py-1.5 text-tecnico">
+                          <span className="font-mono font-bold mr-1">{String(dayNum).padStart(2, "0")}</span>
+                          <span className="text-[10px] text-tecnico/50">({formatShortDateSpanish(log.fecha)})</span>
+                        </td>
+                        <td className="px-3 py-1.5 text-tecnico text-right font-mono">
+                          {new Intl.NumberFormat("es-CL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(log.lceActual)} t
+                        </td>
+                        <td className="px-3 py-1.5 text-tecnico/60 text-right font-mono">
+                          {new Intl.NumberFormat("es-CL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(lceTarget)} t
+                        </td>
+                        <td className={`px-3 py-1.5 text-right font-mono font-bold ${
+                          pct >= 100 ? "text-[#3FAA88]" : pct >= 80 ? "text-[#D69E2E]" : "text-rose-500"
+                        }`}>
+                          {pct.toFixed(1)}%
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
