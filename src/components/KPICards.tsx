@@ -5,6 +5,7 @@
 
 import { motion } from "motion/react";
 import { TrendingUp, Truck, Route, CalendarCheck, Percent, Layers, ShieldCheck } from "lucide-react";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from "recharts";
 import { DailyLog, MonthSummary } from "../types";
 import { formatShortDateSpanish } from "../data";
 
@@ -206,36 +207,46 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
             </div>
           </div>
 
-          {/* VISUAL SHUTTLE ANIMATION RENDER */}
-          <div className="w-full h-24 my-3 bg-calido rounded-xl relative flex flex-col justify-center gap-2 px-4 border border-nucleo/10">
-            {/* Track 1: Backwards shadow */}
-            <div className="relative w-full h-6 bg-white rounded-md border border-nucleo/5 flex items-center justify-between px-2 overflow-hidden">
-              <span className="text-[8px] text-tecnico/40 font-mono tracking-wider">LÍNEA DE MEZCLADO</span>
-              <div className="flex gap-2">
-                <div className="w-5 h-1 bg-nucleo/10 rounded animate-pulse" />
-                <div className="w-3 h-1 bg-litio/35 rounded" />
-              </div>
-            </div>
-            {/* Track 2: Animated vehicle lane */}
-            <div className="relative w-full h-9 bg-white rounded-md flex items-center overflow-hidden border border-nucleo/5">
-              <div className="absolute inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-nucleo/15 to-transparent top-1/2 -translate-y-1/2" />
-              
-              {/* Dynamic Animated Delivery Fleet */}
-              <div className="flex gap-12 items-center w-max animate-[marquee_12s_linear_infinite]">
-                <div className="flex items-center gap-1.5 bg-nucleo/10 border border-nucleo/20 px-1.5 py-0.5 rounded text-nucleo">
-                  <Truck className="w-3.5 h-3.5 text-[#461D77]" />
-                  <span className="text-[8px] font-mono">LITIO-07</span>
-                </div>
-                <div className="flex items-center gap-1.5 bg-ionizado/10 border border-ionizado/20 px-1.5 py-0.5 rounded text-ionizado font-bold">
-                  <Truck className="w-3.5 h-3.5 text-[#3FAA88]" />
-                  <span className="text-[8px] font-mono">LITIO-14</span>
-                </div>
-                <div className="flex items-center gap-1.5 bg-violeta/10 border border-violeta/20 px-1.5 py-0.5 rounded text-violeta">
-                  <Truck className="w-3.5 h-3.5 text-[#7177EC]" />
-                  <span className="text-[8px] font-mono">LITIO-11</span>
-                </div>
-              </div>
-            </div>
+          {/* COMPACT COMPARATIVE BAR CHART */}
+          <div className="w-full h-24 my-3 bg-calido rounded-xl border border-nucleo/10 p-2 flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={[
+                  { name: "Programado", viajes: currentLog.viajesProgramados },
+                  { name: "Realizado", viajes: currentLog.viajesRealizados }
+                ]}
+                margin={{ top: 8, right: 10, left: 10, bottom: 5 }}
+              >
+                <XAxis
+                  dataKey="name"
+                  fontSize={10}
+                  fontWeight="600"
+                  tickLine={false}
+                  axisLine={false}
+                  stroke="#5E6366"
+                />
+                <YAxis hide />
+                <Tooltip
+                  cursor={{ fill: 'rgba(70, 29, 119, 0.04)', radius: 4 }}
+                  formatter={(value: any) => [intFmt(value) + " Viajes", ""]}
+                  labelStyle={{ display: 'none' }}
+                  contentStyle={{
+                    fontSize: '10px',
+                    fontFamily: 'monospace',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(70, 29, 119, 0.12)',
+                    padding: '4px 8px',
+                    backgroundColor: '#ffffff',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+                  }}
+                />
+                <Bar dataKey="viajes" radius={[4, 4, 0, 0]} barSize={32}>
+                  {/* Programados (deep violet), Realizados (teal/emerald) */}
+                  <Cell fill="#461D77" />
+                  <Cell fill="#3FAA88" />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
