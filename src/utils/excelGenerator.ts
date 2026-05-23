@@ -428,6 +428,38 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
           logsSheetName = foundAlternative || workbook.SheetNames[0];
         }
 
+        // Parse special "Base SLIT" travel data if present
+        const slitTravelData = new Map<string, { viajesProgramados: number; viajesRealizados: number }>();
+        if (blitSheetName) {
+          const blitSheet = workbook.Sheets[blitSheetName];
+          const blitRows = XLSX.utils.sheet_to_json<any[]>(blitSheet, { header: 1 });
+          if (blitRows && blitRows.length > 0) {
+            for (let r = 0; r < blitRows.length; r++) {
+              const row = blitRows[r];
+              if (!row || row.length < 1) continue;
+              
+              const cellA = row[0]; // Columna A: Fecha
+              if (cellA === undefined || cellA === null) continue;
+              
+              const dateStr = parseCellAsDate(cellA) || parseSpanishDateString(String(cellA));
+              if (!dateStr) continue;
+              
+              // Columna C: Viajes Programados (index 2)
+              // Columna E: Viajes Realizados (index 4)
+              const rawC = row.length > 2 ? row[2] : undefined;
+              const rawE = row.length > 4 ? row[4] : undefined;
+              
+              const viajesProg = rawC !== undefined && rawC !== null ? Math.round(cleanCellValueToNumber(rawC)) : 0;
+              const viajesReal = rawE !== undefined && rawE !== null ? Math.round(cleanCellValueToNumber(rawE)) : 0;
+              
+              slitTravelData.set(dateStr, {
+                viajesProgramados: isNaN(viajesProg) ? 0 : viajesProg,
+                viajesRealizados: isNaN(viajesReal) ? 0 : viajesReal
+              });
+            }
+          }
+        }
+
         const worksheet = workbook.Sheets[logsSheetName];
         
         // Convert to JSON with headers
@@ -505,17 +537,56 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
               formattedFecha = start.toISOString().split("T")[0];
             }
 
+            // Standard columns
+            const toneladasProgramadas = parseFloat(findValue(["toneladasprogramadas", "toneladasprog", "tonprog", "programadaston"], 0)) || 0;
+            const toneladasDespachadas = parseFloat(findValue(["toneladasdespachadas", "despachadaston", "toneladasefectivas", "despashadaston"], 0)) || 0;
+            const m3Despachados = parseFloat(findValue(["m3despachados", "m3", "metroscubicos", "cubicmeters"], 0)) || 0;
+            const lceProgramado = parseFloat(findValue(["lceprogramado", "lceprog", "lcetarget"], 845.18)) || 0;
+            const lceActual = parseFloat(findValue(["lceactual", "lcesda", "lcereal"], 0)) || 0;
+            const nivelPozasPqlc = String(findValue(["nivelpozas", "pozas", "pqlc"], "S/D")).trim() || "S/D";
+
+            // Determine voyages from standard headers or default
+            let viajesProgramados = parseInt(findValue(["viajesprogramados", "viajesprog", "tripsprog"], 0)) || 0;
+            let viajesRealizados = parseInt(findValue(["viajesrealizados", "viajesefectivos", "viajesreal", "tripsact"], 0)) || 0;
+
+            // Merge / override with Base SLIT data if found
+            const slitOverride = slitTravelData.get(formattedFecha);
+            if (slitOverride) {
+              viajesProgramados = slitOverride.viajesProgramados;
+              viajesRealizados = slitOverride.viajesRealizados;
+            } else if (viajesRealizados === 0 && toneladasDespachadas > 0) {
+              viajesRealizados = Math.round(toneladasDespachadas / 29.01);
+            }
+
             return {
               id: formattedFecha,
               fecha: formattedFecha,
-              toneladasProgramadas: parseFloat(findValue(["toneladasprogramadas", "toneladasprog", "tonprog", "programadaston"], 0)) || 0,
-              toneladasDespachadas: parseFloat(findValue(["toneladasdespachadas", "despachadaston", "toneladasefectivas", "despashadaston"], 0)) || 0,
-              viajesProgramados: parseInt(findValue(["viajesprogramados", "viajesprog", "tripsprog"], 0)) || 0,
-              viajesRealizados: parseInt(findValue(["viajesrealizados", "viajesefectivos", "viajesreal", "tripsact"], 0)) || 0,
-              m3Despachados: parseFloat(findValue(["m3despachados", "m3", "metroscubicos", "cubicmeters"], 0)) || 0,
-              lceProgramado: parseFloat(findValue(["lceprogramado", "lceprog", "lcetarget"], 845.18)) || 0,
-              lceActual: parseFloat(findValue(["lceactual", "lcesda", "lcereal"], 0)) || 0,
-              nivelPozasPqlc: String(findValue(["nivelpozas", "pozas", "pqlc"], "S/D")).trim() || "S/D",
+              toneladasProgramadas,
+              toneladasDespachadas,
+              viajesProgramados,
+              viajesRealizados,
+              m3Despachados,
+              lceProgramado,
+              lceActual,
+              nivelPozasPqlc,
+            };
+          });
+        } else if (slitTravelData.size > 0) {
+          // Parse directly from slitTravelData map!
+          logs = Array.from(slitTravelData.entries()).map(([dateStr, travel]) => {
+            const toneProg = travel.viajesProgramados * 28.5;
+            const toneDesp = travel.viajesRealizados * 29.04;
+            return {
+              id: dateStr,
+              fecha: dateStr,
+              toneladasProgramadas: toneProg,
+              toneladasDespachadas: toneDesp,
+              viajesProgramados: travel.viajesProgramados,
+              viajesRealizados: travel.viajesRealizados,
+              m3Despachados: parseFloat((toneDesp / 1.26714).toFixed(2)),
+              lceProgramado: 845.18,
+              lceActual: parseFloat((toneDesp * 0.3061).toFixed(2)),
+              nivelPozasPqlc: "S/D"
             };
           });
         } else {
