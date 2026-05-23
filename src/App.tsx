@@ -12,6 +12,7 @@ import { DashboardCharts } from "./components/DashboardCharts";
 import { downloadExcelTemplate, parseUploadedExcel } from "./utils/excelGenerator";
 import { BarChart3, ListFilter, AlertCircle, Sparkles } from "lucide-react";
 import { ExcelOverrides } from "./types";
+import html2canvas from "html2canvas";
 
 export default function App() {
   // Application states
@@ -21,6 +22,7 @@ export default function App() {
   const [fileName, setFileName] = useState<string | null>(null);
   const [errorNotice, setErrorNotice] = useState<string | null>(null);
   const [excelOverrides, setExcelOverrides] = useState<ExcelOverrides | null>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
 
   // Derive unique absolute dates available in logs (sorted chronologically)
   const allDates = useMemo(() => {
@@ -89,8 +91,43 @@ export default function App() {
     }
   };
 
-  const handleDownloadTemplate = () => {
-    downloadExcelTemplate(defaultDailyLogs);
+  const handleDownloadImage = () => {
+    setIsCapturing(true);
+    // Let the DOM/render cycle align
+    setTimeout(async () => {
+      const element = document.getElementById("dashboard-capture-area");
+      if (!element) {
+        setIsCapturing(false);
+        return;
+      }
+      try {
+        const canvas = await html2canvas(element, {
+          backgroundColor: "#FAF5E6", // Match --color-calido
+          scale: 2.5, // Crisp retina image resolution
+          useCORS: true,
+          logging: false,
+          allowTaint: true,
+          onclone: (clonedDoc) => {
+            const clonedEl = clonedDoc.getElementById("dashboard-capture-area");
+            if (clonedEl) {
+              // Add nice framing padding only for the downloaded high-resolution image
+              clonedEl.style.padding = "28px";
+              clonedEl.style.borderRadius = "16px";
+            }
+          }
+        });
+        
+        const dataUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `NOVANDINO_Reporte_Despacho_${selectedDate}.png`;
+        link.href = dataUrl;
+        link.click();
+      } catch (err) {
+        console.error("Error al generar la imagen del tablero:", err);
+      } finally {
+        setIsCapturing(false);
+      }
+    }, 200);
   };
 
   const handleResetData = () => {
@@ -135,28 +172,37 @@ export default function App() {
           allDates={allDates}
           onDateChange={setSelectedDate}
           onFileUpload={handleFileUpload}
-          onDownloadTemplate={handleDownloadTemplate}
+          onDownloadImage={handleDownloadImage}
           onResetData={handleResetData}
           isCustomFileLoaded={isCustomFileLoaded}
           fileName={fileName}
+          isCapturing={isCapturing}
         />
 
-        {/* SECTION: Quick Status Overview Title */}
-        <div className="flex items-center gap-2 select-none border-l-2 border-nucleo pl-3">
-          <BarChart3 className="w-4 h-4 text-nucleo" />
-          <h2 className="text-xs font-bold tracking-[0.2em] text-nucleo uppercase">
-            Estadísticas e Indicadores Clave (KPI)
-          </h2>
+        {/* Captured Content Wrapper representing everything requested in the attached image */}
+        <div id="dashboard-capture-area" className="flex flex-col gap-6 bg-calido">
+          {/* SECTION: Quick Status Overview Title */}
+          <div className="flex flex-col gap-1 select-none border-l-2 border-nucleo pl-3">
+            <span className="text-[10px] font-black tracking-[0.25em] text-[#3FAA88] uppercase">
+              NOVANDINO
+            </span>
+            <div className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-nucleo" />
+              <h2 className="text-xs font-bold tracking-[0.2em] text-nucleo uppercase">
+                Estadísticas e Indicadores Clave (KPI)
+              </h2>
+            </div>
+          </div>
+
+          {/* High-Fidelity KPI Despatch & Compliance Cards */}
+          <KPICards currentLog={currentLog} summary={summary} />
+
+          {/* "Otros Datos" Widget Table */}
+          <OtrosDatosTable summary={summary} />
+
+          {/* Interactive Month Charts & Graphs */}
+          <DashboardCharts logs={logs} selectedDate={selectedDate} />
         </div>
-
-        {/* High-Fidelity KPI Despatch & Compliance Cards */}
-        <KPICards currentLog={currentLog} summary={summary} />
-
-        {/* "Otros Datos" Widget Table */}
-        <OtrosDatosTable summary={summary} />
-
-        {/* Interactive Month Charts & Graphs */}
-        <DashboardCharts logs={logs} selectedDate={selectedDate} />
 
         {/* Sticky Executive Footer with general helpful notes */}
         <footer className="pt-8 pb-4 text-center border-t border-nucleo/15 select-none text-[9px] tracking-[0.3em] text-tecnico/40 uppercase">
