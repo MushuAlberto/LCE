@@ -4,7 +4,7 @@
  */
 
 import React, { useRef, useState } from "react";
-import { Upload, Download, RefreshCw, Calendar, FileSpreadsheet, CheckCircle2, AlertCircle } from "lucide-react";
+import { Upload, RefreshCw, Calendar, FileSpreadsheet, CheckCircle2, AlertCircle, Image, Loader2 } from "lucide-react";
 import { formatFullDateSpanish } from "../data";
 
 interface DashboardHeaderProps {
@@ -12,10 +12,11 @@ interface DashboardHeaderProps {
   allDates: string[];
   onDateChange: (date: string) => void;
   onFileUpload: (file: File) => void;
-  onDownloadTemplate: () => void;
+  onDownloadImage: () => void;
   onResetData: () => void;
   isCustomFileLoaded: boolean;
   fileName: string | null;
+  isCapturing?: boolean;
 }
 
 export function DashboardHeader({
@@ -23,10 +24,11 @@ export function DashboardHeader({
   allDates,
   onDateChange,
   onFileUpload,
-  onDownloadTemplate,
+  onDownloadImage,
   onResetData,
   isCustomFileLoaded,
   fileName,
+  isCapturing = false,
 }: DashboardHeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -215,13 +217,20 @@ export function DashboardHeader({
           </label>
           <div className="grid grid-cols-2 gap-3 h-11">
             <button
-              onClick={onDownloadTemplate}
-              className="flex items-center justify-center gap-2 bg-nucleo hover:bg-nucleo/95 active:scale-95 text-white transition-colors rounded-lg text-xs font-bold uppercase tracking-widest shadow-md"
-              title="Descargar plantilla de Excel pre-configurada"
-              id="btn-download-excel-template"
+              onClick={onDownloadImage}
+              disabled={isCapturing}
+              className={`flex items-center justify-center gap-2 bg-gradient-to-r from-nucleo to-[#7177EC] hover:from-nucleo/95 hover:to-[#7177EC]/95 active:scale-95 text-white transition-all rounded-lg text-xs font-bold uppercase tracking-widest shadow-md ${
+                isCapturing ? "opacity-75 cursor-wait" : ""
+              }`}
+              title="Descargar reporte como imagen PNG de alta resolución"
+              id="btn-download-dashboard-image"
             >
-              <Download className="w-3.5 h-3.5 text-litio" />
-              Plantilla
+              {isCapturing ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-litio" />
+              ) : (
+                <Image className="w-3.5 h-3.5 text-litio" />
+              )}
+              {isCapturing ? "Procesando..." : "Plantilla"}
             </button>
             <button
               onClick={onResetData}
