@@ -288,7 +288,7 @@ function tryParsingBaseSlit(worksheet: XLSX.WorkSheet): DailyLog[] | null {
     let viajesProgramados = indexViajesProg !== -1 ? parseInt(String(row[indexViajesProg])) || 95 : 95;
     let viajesRealizados = indexViajesReal !== -1 ? parseInt(String(row[indexViajesReal])) || 0 : 0;
     let lceProgramado = indexLceProg !== -1 ? cleanCellValueToNumber(row[indexLceProg]) : 845.18;
-    let lceActual = indexLceActual !== -1 ? cleanCellValueToNumber(row[indexLceActual]) : 0;
+    let lceActual = indexLceActual !== -1 ? cleanCellValueToNumber(row[indexLceActual]) : (row.length > 12 ? cleanCellValueToNumber(row[12]) : 0);
     let nivelPozasPqlc = indexNivelPozas !== -1 ? String(row[indexNivelPozas] || "S/D").trim() : "S/D";
 
     // Deduce viajes / density / LCE if missing to maintain visual accuracy
@@ -298,7 +298,7 @@ function tryParsingBaseSlit(worksheet: XLSX.WorkSheet): DailyLog[] | null {
     if (m3Despachados === 0 && toneladasDespachadas > 0) {
       m3Despachados = parseFloat((toneladasDespachadas / 1.26714).toFixed(2));
     }
-    if (lceActual === 0 && toneladasDespachadas > 0) {
+    if (lceActual === 0 && indexLceActual === -1 && row.length <= 12 && toneladasDespachadas > 0) {
       lceActual = parseFloat((toneladasDespachadas * 0.3061).toFixed(2));
     }
     if (nivelPozasPqlc === "S/D" && toneladasDespachadas > 0) {
@@ -437,6 +437,7 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
           toneladasDespachadas: number;
           viajesProgramados: number;
           viajesRealizados: number;
+          lceActual: number;
         }>();
         if (blitSheetName) {
           const blitSheet = workbook.Sheets[blitSheetName];
@@ -456,22 +457,26 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
               // Columna C: Viajes Programados (index 2)
               // Columna D: Tonelaje Despachado (index 3)
               // Columna E: Viajes Realizados (index 4)
+              // Columna M: LCE (SdA) (index 12)
               const rawB = row.length > 1 ? row[1] : undefined;
               const rawC = row.length > 2 ? row[2] : undefined;
               const rawD = row.length > 3 ? row[3] : undefined;
               const rawE = row.length > 4 ? row[4] : undefined;
+              const rawM = row.length > 12 ? row[12] : undefined;
               
               const tonProg = rawB !== undefined && rawB !== null ? cleanCellValueToNumber(rawB) : 0;
               const viajesProg = rawC !== undefined && rawC !== null ? Math.round(cleanCellValueToNumber(rawC)) : 0;
               const tonDesp = rawD !== undefined && rawD !== null ? cleanCellValueToNumber(rawD) : 0;
               const viajesReal = rawE !== undefined && rawE !== null ? Math.round(cleanCellValueToNumber(rawE)) : 0;
+              const lceSda = rawM !== undefined && rawM !== null ? cleanCellValueToNumber(rawM) : undefined;
               
               if (!isNaN(tonProg) || !isNaN(tonDesp) || !isNaN(viajesProg) || !isNaN(viajesReal)) {
                 slitData.set(dateStr, {
                   toneladasProgramadas: isNaN(tonProg) ? 0 : tonProg,
                   toneladasDespachadas: isNaN(tonDesp) ? 0 : tonDesp,
                   viajesProgramados: isNaN(viajesProg) ? 0 : viajesProg,
-                  viajesRealizados: isNaN(viajesReal) ? 0 : viajesReal
+                  viajesRealizados: isNaN(viajesReal) ? 0 : viajesReal,
+                  lceActual: (lceSda !== undefined && !isNaN(lceSda)) ? lceSda : parseFloat((tonDesp * 0.3061).toFixed(2))
                 });
               }
             }
@@ -579,9 +584,7 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
               if (m3Despachados === 0 && toneladasDespachadas > 0) {
                 m3Despachados = parseFloat((toneladasDespachadas / 1.26714).toFixed(2));
               }
-              if (lceActual === 0 && toneladasDespachadas > 0) {
-                lceActual = parseFloat((toneladasDespachadas * 0.3061).toFixed(2));
-              }
+              lceActual = slitOverride.lceActual;
             } else if (viajesRealizados === 0 && toneladasDespachadas > 0) {
               viajesRealizados = Math.round(toneladasDespachadas / 29.01);
             }
@@ -611,7 +614,7 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
               viajesRealizados: rowData.viajesRealizados,
               m3Despachados: parseFloat((rowData.toneladasDespachadas / 1.26714).toFixed(2)),
               lceProgramado: 845.18,
-              lceActual: parseFloat((rowData.toneladasDespachadas * 0.3061).toFixed(2)),
+              lceActual: rowData.lceActual,
               nivelPozasPqlc: "S/D"
             };
           });
