@@ -2,6 +2,14 @@
 
 @theme {
   --font-sans: "Inter", "Outfit", system-ui, -apple-system, sans-serif;
+  --color-nucleo: #461D77;
+  --color-litio: #4FD1C5;
+  --color-ionizado: #3FAA88;
+  --color-violeta: #7177EC;
+  --color-calido: #FAF5E6;
+  --color-tecnico: #171717;
+  --color-mineral: #C59E4D;
+  --color-levanda: #DCDDEE;
 }
 
 @keyframes marquee {
@@ -17,21 +25,21 @@
   animation: marquee 16s linear infinite;
 }
 
-/* Custom slick dark scrollbar for the select picker */
+/* Custom slick Light scrollbar matching our levanda scrollbar token */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: #FAF5E6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1F1F1F;
+  background: #DCDDEE;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(70, 29, 119, 0.1);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2E2E2E;
+  background: #B9BBDD;
 }
 
 /* Perfecting rotate classes if browser doesn't support logical transforms */
