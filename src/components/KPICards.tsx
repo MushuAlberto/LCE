@@ -347,54 +347,41 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
 
       {/* CARD 4: LCE - Salar de Atacama (Circular Progress donut representation) */}
       <div className="bg-white rounded-xl p-5 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-nucleo/5 rounded-full blur-2xl transition-all duration-300 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-nucleo/5 to-[#4FD1C5]/5 rounded-full blur-2xl group-hover:from-nucleo/10 group-hover:to-[#4FD1C5]/10 transition-all duration-500 pointer-events-none" />
         
         <div>
+          {/* Card Header */}
           <div className="flex justify-between items-start gap-2">
-            <span className="text-[10px] font-bold tracking-widest text-[#461D77] uppercase">
-              LCE - Salar de Atacama
-            </span>
-            <span className="text-[10px] font-semibold text-nucleo px-2 py-0.5 bg-nucleo/5 rounded-lg border border-nucleo/10">
+            <div className="flex items-center gap-1.5">
+              <span className="w-1 h-3 bg-gradient-to-b from-[#461D77] to-[#3FAA88] rounded-full" />
+              <span className="text-[10px] font-bold tracking-widest text-[#461D77] uppercase">
+                LCE - Salar de Atacama
+              </span>
+            </div>
+            <span className="text-[9px] font-bold font-mono text-nucleo px-2 py-0.5 bg-nucleo/5 rounded-full border border-nucleo/10 shadow-sm">
               Acum. Mes
             </span>
           </div>
 
-          <div className="my-[13px] grid grid-cols-12 gap-2 items-center">
-            {/* Values Column */}
-            <div className="col-span-12 sm:col-span-7 space-y-2">
-              <div>
-                <p className="text-[10px] text-tecnico/50 font-semibold">LCE Programado</p>
-                <div className="flex items-baseline gap-0.5">
-                  <span className="text-sm font-bold font-mono text-tecnico/70">
-                    {intFmt(summary.lceProgramadoTotal)}
-                  </span>
-                  <span className="text-[10px] text-tecnico/40 font-semibold uppercase font-sans">t</span>
-                </div>
-              </div>
-              <div>
-                <p className="text-[10px] text-tecnico/50 font-semibold">LCE Actual (SdA)</p>
-                <div className="flex items-baseline gap-0.5">
-                  <span className="text-base font-extrabold font-mono text-nucleo">
-                    {numFmt(summary.lceActualTotal, 2)}
-                  </span>
-                  <span className="text-[10px] text-nucleo font-semibold uppercase font-sans">t</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Glowing Donut Column (using dynamic SVG) */}
-            <div className="col-span-12 sm:col-span-5 flex justify-center items-center relative">
-              <svg viewBox="0 0 100 100" className="w-18 h-18 rotate-270">
+          {/* Combined Visual Centerpiece Gauge */}
+          <div className="flex flex-col items-center justify-center relative my-5 h-28">
+            {/* Glowing background ring */}
+            <div className="absolute w-24 h-24 bg-gradient-to-tr from-nucleo/5 to-[#4FD1C5]/5 rounded-full blur-xl animate-pulse" />
+            
+            <div className="relative w-28 h-28 flex items-center justify-center">
+              <svg viewBox="0 0 100 100" className="w-full h-full rotate-270 drop-shadow-sm">
+                {/* Secondary track for glow depth */}
+                <circle cx="50" cy="50" r="41" fill="transparent" stroke="rgba(70, 29, 119, 0.03)" strokeWidth="10" />
                 {/* Background Ring */}
-                <circle cx="50" cy="50" r="40" fill="transparent" stroke="#FAF5E6" strokeWidth="12" />
+                <circle cx="50" cy="50" r="40" fill="transparent" stroke="#FAF5E6" strokeWidth="10" />
                 {/* Colored Dynamic Value Ring */}
                 <circle
                   cx="50"
                   cy="50"
                   r="40"
                   fill="transparent"
-                  stroke="url(#donut-grad)"
-                  strokeWidth="12"
+                  stroke="url(#donut-grad-premium)"
+                  strokeWidth="10"
                   strokeDasharray={`${2 * Math.PI * 40}`}
                   strokeDashoffset={`${2 * Math.PI * 40 * (1 - Math.min(100, summary.lceCumplimiento) / 100)}`}
                   strokeLinecap="round"
@@ -402,37 +389,63 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
                 />
               </svg>
               {/* Inner compliance text label in donut center */}
-              <div className="absolute inset-x-0 inset-y-0 flex flex-col justify-center items-center">
-                <span className="text-[11px] font-bold font-mono text-tecnico leading-none font-bold">
+              <div className="absolute inset-0 flex flex-col justify-center items-center">
+                <span className="text-2xl font-extrabold font-mono text-tecnico leading-none select-none tracking-tight">
                   {numFmt(summary.lceCumplimiento, 0)}%
                 </span>
-                <span className="text-[7px] text-tecnico/55 uppercase font-semibold scale-90 tracking-wide mt-0.5">
+                <span className="text-[7.5px] text-tecnico/45 uppercase font-bold tracking-widest mt-1">
                   Meta LCE
                 </span>
               </div>
-              
-              {/* Gradient definitions for donut */}
-              <svg width="0" height="0">
-                <defs>
-                  <linearGradient id="donut-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#461D77" />
-                    <stop offset="100%" stopColor="#4FD1C5" />
-                  </linearGradient>
-                </defs>
-              </svg>
             </div>
           </div>
+
+          {/* Premium Modular Bento Sub-Cards for detailed values */}
+          <div className="grid grid-cols-2 gap-2 mt-4">
+            <div className="bg-gradient-to-br from-calido/30 to-white p-2.5 rounded-lg border border-nucleo/5 shadow-[0_1px_2px_rgba(70,29,119,0.02)] relative overflow-hidden">
+              <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-nucleo/30" />
+              <p className="text-[9px] text-tecnico/40 font-bold uppercase tracking-wider">Actual SdA</p>
+              <div className="flex items-baseline gap-0.5 mt-0.5">
+                <span className="text-xs font-extrabold font-mono text-nucleo">
+                  {numFmt(summary.lceActualTotal, 2)}
+                </span>
+                <span className="text-[9px] text-nucleo/60 font-semibold font-mono">t</span>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-calido/30 to-white p-2.5 rounded-lg border border-nucleo/5 shadow-[0_1px_2px_rgba(70,29,119,0.02)] relative overflow-hidden">
+              <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-tecnico/20" />
+              <p className="text-[9px] text-tecnico/40 font-bold uppercase tracking-wider">Programado</p>
+              <div className="flex items-baseline gap-0.5 mt-0.5">
+                <span className="text-xs font-extrabold font-mono text-tecnico/70">
+                  {intFmt(summary.lceProgramadoTotal)}
+                </span>
+                <span className="text-[9px] text-tecnico/45 font-semibold font-mono">t</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Gradients definitions for donut */}
+          <svg width="0" height="0" className="absolute">
+            <defs>
+              <linearGradient id="donut-grad-premium" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#461D77" />
+                <stop offset="40%" stopColor="#7177EC" />
+                <stop offset="100%" stopColor="#3FAA88" />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
 
         {/* POZAS MONITOR & FOOTER STATUS */}
-        <div className="mt-2.5 pt-2 border-t border-nucleo/5 flex items-center justify-between">
-          <span className="text-[9px] text-tecnico/50 font-semibold uppercase flex items-center gap-1 mt-0.5 font-sans">
+        <div className="mt-4 pt-3 border-t border-nucleo/5 flex items-center justify-between">
+          <span className="text-[9px] text-tecnico/50 font-semibold uppercase flex items-center gap-1.5 font-sans">
             <Layers className="w-3.5 h-3.5 text-nucleo" /> Nivel Pozas PQLC:
           </span>
-          <span className={`text-[10px] font-semibold font-mono px-2 py-0.5 rounded border ${
+          <span className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded border transition-colors ${
             currentLog.nivelPozasPqlc === "S/D" 
               ? "bg-calido text-tecnico/40 border-nucleo/10" 
-              : "bg-ionizado/10 text-ionizado border-ionizado/15"
+              : "bg-ionizado/10 text-ionizado border-ionizado/15 shadow-sm"
           }`}>
             {currentLog.nivelPozasPqlc}
           </span>
