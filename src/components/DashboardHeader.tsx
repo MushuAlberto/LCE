@@ -81,29 +81,29 @@ export function DashboardHeader({
   };
 
   return (
-    <header className="w-full bg-[#0F0F0F] text-[#F0F0F0] rounded-xl p-6 shadow-xl border border-white/10">
+    <header className="w-full bg-white text-tecnico rounded-xl p-6 shadow-md border border-nucleo/10">
       {/* Top Bar: Brand Logo & Information */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pb-6 border-b border-white/10">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pb-6 border-b border-nucleo/10">
         {/* NOVANDINO Logo & Slogan */}
         <div className="flex items-center gap-4 self-start lg:self-center">
-          <div className="relative flex items-center justify-center w-11 h-11 bg-blue-600 rounded-lg shadow-lg">
+          <div className="relative flex items-center justify-center w-11 h-11 bg-nucleo rounded-lg shadow-lg">
             {/* Elegant Polygon N Logo representing Mining / Lithium */}
             <svg viewBox="0 0 100 100" className="w-7 h-7 fill-none stroke-current text-white" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round">
               <path d="M25 80 V20 L75 80 V20" />
             </svg>
-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-400 rounded-full animate-ping" />
-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-400 rounded-full" />
+            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-litio rounded-full animate-ping" />
+            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-litio rounded-full" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-xl tracking-widest text-[#F0F0F0]">
+              <span className="font-bold text-xl tracking-widest text-[#461D77]">
                 NOVANDINO
               </span>
-              <span className="text-[10px] uppercase font-bold bg-blue-500/10 border border-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded font-mono">
+              <span className="text-[10px] uppercase font-bold bg-nucleo/10 border border-nucleo/20 text-nucleo px-1.5 py-0.5 rounded font-mono">
                 LITIO
               </span>
             </div>
-            <p className="text-[9px] tracking-[0.3em] text-white/40 font-semibold uppercase">
+            <p className="text-[9px] tracking-[0.3em] text-tecnico/50 font-semibold uppercase">
               SOMOS LITIO, SOMOS FUTURO
             </p>
           </div>
@@ -111,13 +111,13 @@ export function DashboardHeader({
 
         {/* Corporate Titles */}
         <div className="text-center lg:text-right flex-1 select-none">
-          <h1 className="text-lg lg:text-xl font-light tracking-widest text-white uppercase">
-            Despacho Diario <span className="text-white/40">| Cloruro de Litio</span>
+          <h1 className="text-lg lg:text-xl font-medium tracking-widest text-nucleo uppercase">
+            Despacho Diario <span className="text-tecnico/40">| Cloruro de Litio</span>
           </h1>
-          <p className="text-xs font-semibold tracking-widest text-blue-400 mt-1 uppercase">
+          <p className="text-xs font-semibold tracking-widest text-nucleo/80 mt-1 uppercase">
             Subgerencia Logística Litio &bull; Despacho Litio
           </p>
-          <p className="text-[10px] font-medium tracking-widest text-white/30 uppercase mt-0.5">
+          <p className="text-[10px] font-medium tracking-widest text-tecnico/40 uppercase mt-0.5">
             Salar de Atacama
           </p>
         </div>
@@ -128,15 +128,15 @@ export function DashboardHeader({
         
         {/* Date Selection Control */}
         <div className="flex flex-col gap-2">
-          <label className="text-[10px] text-white/55 flex items-center gap-1.5 font-bold tracking-widest uppercase">
-            <Calendar className="w-3.5 h-3.5 text-blue-500" />
+          <label className="text-[10px] text-tecnico/60 flex items-center gap-1.5 font-bold tracking-widest uppercase">
+            <Calendar className="w-3.5 h-3.5 text-nucleo" />
             Fecha de Reporte (Día de Control)
           </label>
           <div className="flex gap-2 items-center">
             <select
               value={selectedDate}
               onChange={(e) => onDateChange(e.target.value)}
-              className="flex-1 bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-[#F0F0F0] focus:outline-none focus:border-blue-500 transition-colors cursor-pointer shadow-inner scrollbar-thin"
+              className="flex-1 bg-calido border border-nucleo/15 rounded-lg px-4 py-2.5 text-sm text-tecnico focus:outline-none focus:border-nucleo transition-colors cursor-pointer shadow-inner scrollbar-thin"
               id="date-select-picker"
             >
               {allDates.map((date) => {
@@ -144,22 +144,22 @@ export function DashboardHeader({
                 const day = dObj.getDate();
                 const month = dObj.toLocaleString("es-ES", { month: "short" });
                 return (
-                  <option key={date} value={date} className="bg-[#0A0A0A]">
+                  <option key={date} value={date} className="bg-calido text-tecnico">
                     {date} — {day} de {month}
                   </option>
                 );
               })}
             </select>
           </div>
-          <p className="text-[11px] text-white/40 mt-1 font-mono italic">
+          <p className="text-[11px] text-tecnico/50 mt-1 font-mono italic">
             Visualizando: {formatFullDateSpanish(selectedDate)}
           </p>
         </div>
 
         {/* Excel File Upload Area */}
         <div className="flex flex-col gap-2">
-          <label className="text-[10px] text-white/55 flex items-center gap-1.5 font-bold tracking-widest uppercase">
-            <FileSpreadsheet className="w-3.5 h-3.5 text-blue-500" />
+          <label className="text-[10px] text-tecnico/60 flex items-center gap-1.5 font-bold tracking-widest uppercase">
+            <FileSpreadsheet className="w-3.5 h-3.5 text-nucleo" />
             Cargar Matriz de Datos (Excel / XLSM / CSV)
           </label>
           
@@ -170,10 +170,10 @@ export function DashboardHeader({
             onClick={() => fileInputRef.current?.click()}
             className={`relative flex items-center justify-center gap-3 border border-dashed rounded-lg px-4 py-2 cursor-pointer transition-all duration-200 h-11 ${
               isDragOver
-                ? "border-blue-500 bg-blue-950/10 text-blue-200"
+                ? "border-nucleo bg-nucleo/5 text-nucleo"
                 : isCustomFileLoaded
-                ? "border-emerald-500/50 bg-emerald-950/10 hover:bg-emerald-900/10 text-emerald-200"
-                : "border-white/10 bg-[#0A0A0A]/50 hover:bg-[#141414] text-white/60"
+                ? "border-ionizado bg-ionizado/5 hover:bg-ionizado/10 text-ionizado"
+                : "border-nucleo/15 bg-calido/30 hover:bg-calido/50 text-tecnico/70"
             }`}
             id="excel-drop-zone"
           >
@@ -185,13 +185,13 @@ export function DashboardHeader({
               className="hidden"
             />
             
-            <Upload className={`w-4 h-4 ${isCustomFileLoaded ? "text-emerald-400" : "text-blue-500"}`} />
+            <Upload className={`w-4 h-4 ${isCustomFileLoaded ? "text-ionizado" : "text-nucleo"}`} />
             <span className="text-xs truncate max-w-[200px] font-medium">
               {isCustomFileLoaded ? fileName : "Arrastre o seleccione su archivo Excel (.xlsx, .xlsm) o CSV"}
             </span>
 
             {isCustomFileLoaded && (
-              <span className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-1 py-0.5 rounded font-mono uppercase">
+              <span className="text-[9px] bg-ionizado/10 text-ionizado border border-ionizado/20 px-1 py-0.5 rounded font-mono uppercase">
                 Activo
               </span>
             )}
@@ -200,9 +200,9 @@ export function DashboardHeader({
           {/* Feedback message overlay inside UI */}
           {uploadStatus !== "idle" && (
             <div className={`flex items-center gap-1.5 text-[10px] p-1.5 rounded mt-1 font-medium ${
-              uploadStatus === "success" ? "bg-emerald-500/10 text-emerald-300 border border-emerald-400/20" : "bg-rose-500/10 text-rose-300 border border-rose-400/20"
+              uploadStatus === "success" ? "bg-ionizado/15 text-ionizado border border-ionizado/20" : "bg-rose-50 text-rose-700 border border-rose-200"
             }`}>
-              {uploadStatus === "success" ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" /> : <AlertCircle className="w-3.5 h-3.5 text-rose-400 flex-shrink-0" />}
+              {uploadStatus === "success" ? <CheckCircle2 className="w-3.5 h-3.5 text-ionizado flex-shrink-0" /> : <AlertCircle className="w-3.5 h-3.5 text-rose-600 flex-shrink-0" />}
               <span className="truncate">{statusMessage}</span>
             </div>
           )}
@@ -210,28 +210,28 @@ export function DashboardHeader({
 
         {/* Operational Actions */}
         <div className="flex flex-col gap-2 justify-end">
-          <label className="text-[10px] text-white/55 flex items-center gap-1.5 font-bold tracking-widest uppercase">
+          <label className="text-[10px] text-tecnico/60 flex items-center gap-1.5 font-bold tracking-widest uppercase">
             Acciones Ejecutivas
           </label>
           <div className="grid grid-cols-2 gap-3 h-11">
             <button
               onClick={onDownloadTemplate}
-              className="flex items-center justify-center gap-2 bg-white hover:bg-gray-200 active:bg-gray-300 transition-colors text-black rounded-lg text-xs font-bold uppercase tracking-widest shadow-md active:scale-95"
+              className="flex items-center justify-center gap-2 bg-nucleo hover:bg-nucleo/95 active:scale-95 text-white transition-colors rounded-lg text-xs font-bold uppercase tracking-widest shadow-md"
               title="Descargar plantilla de Excel pre-configurada"
               id="btn-download-excel-template"
             >
-              <Download className="w-3.5 h-3.5 text-blue-600" />
+              <Download className="w-3.5 h-3.5 text-litio" />
               Plantilla
             </button>
             <button
               onClick={onResetData}
               disabled={!isCustomFileLoaded}
-              className={`flex items-center justify-center gap-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all shadow-md active:scale-95 ${
+              className={`flex items-center justify-center gap-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all shadow-sm active:scale-95 ${
                 isCustomFileLoaded
-                  ? "bg-transparent hover:bg-white/5 text-rose-400 border border-rose-500/20 hover:border-rose-500/40"
-                  : "bg-transparent text-white/20 border border-white/5 pointer-events-none"
+                  ? "bg-transparent hover:bg-rose-50 text-rose-600 border border-rose-300"
+                  : "bg-transparent text-tecnico/20 border border-tecnico/10 pointer-events-none"
               }`}
-              title="Restaurar base de datos histórica de demostración"
+              title="Restaurar base de datos histórica de de demostración"
               id="btn-reset-excel-data"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isCustomFileLoaded ? "animate-pulse" : ""}`} />
