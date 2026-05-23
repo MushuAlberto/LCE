@@ -43,6 +43,7 @@ export interface ExcelOverrides {
   promedioCamionM3?: number;
   cantidadCamiones?: number;
   productividadMes?: number;
+  lceActualTotal?: number;
 }
 
 export interface ParseResult {
