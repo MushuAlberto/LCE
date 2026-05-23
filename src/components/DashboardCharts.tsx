@@ -319,15 +319,11 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
                   <tr className="border-b border-nucleo/10">
                     <th className="px-3 py-2 text-[9px] font-bold text-[#3FAA88] font-mono tracking-wider uppercase">Día / Fecha</th>
                     <th className="px-3 py-2 text-[9px] font-bold text-[#3FAA88] font-mono tracking-wider uppercase text-right flex-1">LCE Actual (SdA)</th>
-                    <th className="px-3 py-2 text-[9px] font-bold text-[#3FAA88] font-mono tracking-wider uppercase text-right">Meta LCE</th>
-                    <th className="px-3 py-2 text-[9px] font-bold text-[#3FAA88] font-mono tracking-wider uppercase text-right">Cumplimiento</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-nucleo/5">
                   {logs.map((log) => {
                     const isSelected = log.fecha === selectedDate;
-                    const lceTarget = log.lceProgramado;
-                    const pct = lceTarget > 0 ? (log.lceActual / lceTarget) * 100 : 0;
                     const dayNum = new Date(log.fecha + "T00:00:00").getDate();
 
                     return (
@@ -343,16 +339,8 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
                           <span className="font-mono font-bold mr-1">{String(dayNum).padStart(2, "0")}</span>
                           <span className="text-[10px] text-tecnico/50">({formatShortDateSpanish(log.fecha)})</span>
                         </td>
-                        <td className="px-3 py-1.5 text-tecnico text-right font-mono">
+                        <td className="px-3 py-1.5 text-tecnico text-right font-mono font-bold">
                           {new Intl.NumberFormat("es-CL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(log.lceActual)} t
-                        </td>
-                        <td className="px-3 py-1.5 text-tecnico/60 text-right font-mono">
-                          {new Intl.NumberFormat("es-CL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(lceTarget)} t
-                        </td>
-                        <td className={`px-3 py-1.5 text-right font-mono font-bold ${
-                          pct >= 100 ? "text-[#3FAA88]" : pct >= 80 ? "text-[#D69E2E]" : "text-rose-500"
-                        }`}>
-                          {pct.toFixed(1)}%
                         </td>
                       </tr>
                     );
