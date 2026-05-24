@@ -104,7 +104,10 @@ export default function App() {
         setErrorNotice("No se pudo encontrar el área del tablero para la captura.");
         return;
       }
+      
+      const originalGetComputedStyle = window.getComputedStyle;
       try {
+
         // Regex to match oklch(...) and oklab(...) color values with up to one nested parentheses level
         const oklchOklabRegex = /(oklch|oklab)\((?:[^()]+|\([^()]*\))*\)/gi;
 
@@ -112,7 +115,7 @@ export default function App() {
         // so that the old CSS parser of html2canvas doesn't crash on modern Tailwind CSS v4 styles
         const approximateOklch = (matchedStr: string): string => {
           const cleaned = matchedStr.replace(/\s+/g, " ").trim().toLowerCase();
-          const match = cleaned.match(/(?:oklch|oklab)\(\s*([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)(?:\s*\/\s*([0-9.%]+))?\s*\)/i);
+          const match = cleaned.match(/(?:oklch|oklab)\(\s*([0-9.%eE-]+)\s+([0-9.%eE-]+)\s+([0-9.%eE-]+)(?:\s*\/\s*([0-9.%eE-]+))?\s*\)/i);
           if (!match) {
             return "rgba(120, 120, 120, 0.5)"; // Neutral fallback for variable-based oklch colors
           }
@@ -164,6 +167,39 @@ export default function App() {
           return hex;
         };
 
+        const replaceOklchInString = (str: string): string => {
+          if (typeof str !== "string") return str;
+          if (!str.includes("oklch") && !str.includes("oklab")) return str;
+          return str.replace(oklchOklabRegex, (m) => approximateOklch(m));
+        };
+
+        const makeCustomGetComputedStyle = (originalFn: typeof window.getComputedStyle, boundCtx: any) => {
+          return function(el: Element, pseudoElt?: string | null): CSSStyleDeclaration {
+            const style = originalFn.call(boundCtx, el, pseudoElt);
+            return new Proxy(style, {
+              get(target, prop) {
+                if (prop === "getPropertyValue") {
+                  return function(propertyName: string): string {
+                    const value = target.getPropertyValue(propertyName);
+                    return replaceOklchInString(value);
+                  };
+                }
+                const val = Reflect.get(target, prop, target);
+                if (typeof val === "string") {
+                  return replaceOklchInString(val);
+                }
+                if (typeof val === "function") {
+                  return val.bind(target);
+                }
+                return val;
+              }
+            });
+          };
+        };
+
+        // Apply global temporary override
+        window.getComputedStyle = makeCustomGetComputedStyle(originalGetComputedStyle, window);
+
         const canvas = await html2canvas(element, {
           backgroundColor: "#FAF5E6", // Match --color-calido
           scale: 2.0, // Crisp image resolution without extra lag
@@ -171,6 +207,12 @@ export default function App() {
           logging: false,
           allowTaint: false, // Must be false or canvas.toDataURL fails with SecurityError
           onclone: (clonedDoc) => {
+            // Apply getComputedStyle interceptor proxy within the cloned document's frame
+            if (clonedDoc.defaultView) {
+              const clonedOriginal = clonedDoc.defaultView.getComputedStyle;
+              clonedDoc.defaultView.getComputedStyle = makeCustomGetComputedStyle(clonedOriginal, clonedDoc.defaultView);
+            }
+
             // Apply the oklch/oklab replacement fix to all style tags in the cloned document
             clonedDoc.querySelectorAll("style").forEach((styleEl) => {
               if (styleEl.textContent) {
@@ -238,6 +280,7 @@ export default function App() {
         console.error("Error al generar la imagen del tablero:", err);
         setErrorNotice(`No se pudo descargar la imagen: ${err?.message || err}`);
       } finally {
+        window.getComputedStyle = originalGetComputedStyle;
         setIsCapturing(false);
       }
     }, 250);
