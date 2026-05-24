@@ -181,6 +181,7 @@ export function DashboardCharts({ logs, selectedDate, isCapturing }: DashboardCh
         name="Vueltas Desp."
         radius={[3, 3, 0, 0]}
         label={renderBar1Label}
+        isAnimationActive={!isCapturing}
       />
 
       {/* Programmed trips Target Line */}
@@ -193,6 +194,7 @@ export function DashboardCharts({ logs, selectedDate, isCapturing }: DashboardCh
         activeDot={{ r: 3.5 }}
         name="Vueltas Prog."
         strokeDasharray="3 3"
+        isAnimationActive={!isCapturing}
       />
     </>
   );
@@ -242,6 +244,7 @@ export function DashboardCharts({ logs, selectedDate, isCapturing }: DashboardCh
         name="LCE (SdA)"
         radius={[3, 3, 0, 0]}
         label={renderBar2Label}
+        isAnimationActive={!isCapturing}
       />
     </>
   );
