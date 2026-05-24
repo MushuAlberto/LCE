@@ -65,9 +65,10 @@ const renderBar2Label = (props: any) => {
 interface DashboardChartsProps {
   logs: DailyLog[];
   selectedDate: string;
+  isCapturing?: boolean;
 }
 
-export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
+export function DashboardCharts({ logs, selectedDate, isCapturing }: DashboardChartsProps) {
   // Extract month year for labels
   const dObj = new Date(selectedDate + "T00:00:00");
   const monthNames = [
@@ -134,6 +135,117 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
     return null;
   };
 
+  const chart1Content = (
+    <>
+      <defs>
+        {/* Gradient for bar glow */}
+        <linearGradient id="bar1Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#461D77" stopOpacity={0.85} />
+          <stop offset="100%" stopColor="#7177EC" stopOpacity={0.2} />
+        </linearGradient>
+      </defs>
+      
+      <CartesianGrid stroke="rgba(70, 29, 119, 0.05)" strokeDasharray="3 3" vertical={false} />
+      
+      <XAxis
+        dataKey="name"
+        stroke="#000000"
+        fontSize={9}
+        tickLine={false}
+        dy={8}
+        axisLine={false}
+        tickFormatter={(val) => val.split("-")[0]} // Just show day numbers to de-clutter
+      />
+      <YAxis
+        stroke="#000000"
+        fontSize={9}
+        axisLine={false}
+        tickLine={false}
+        domain={[0, "auto"]}
+      />
+      
+      <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(70, 29, 119, 0.02)" }} />
+      
+      <Legend
+        verticalAlign="bottom"
+        height={36}
+        iconType="circle"
+        fontSize={10}
+        wrapperStyle={{ paddingTop: "12px", fontSize: "10px", color: "#171717" }}
+      />
+
+      {/* Realized trips / Vueltas Desp. Bar */}
+      <Bar
+        dataKey="Viajes Realizados (Vueltas Desp.)"
+        fill="url(#bar1Grad)"
+        name="Vueltas Desp."
+        radius={[3, 3, 0, 0]}
+        label={renderBar1Label}
+      />
+
+      {/* Programmed trips Target Line */}
+      <Line
+        type="monotone"
+        dataKey="Viajes Programados (Vueltas Prog.)"
+        stroke="#171717"
+        strokeWidth={1.5}
+        dot={{ r: 1.5, fill: "#171717", strokeWidth: 1 }}
+        activeDot={{ r: 3.5 }}
+        name="Vueltas Prog."
+        strokeDasharray="3 3"
+      />
+    </>
+  );
+
+  const chart2Content = (
+    <>
+      <defs>
+        {/* LCE actual bar fill gradient */}
+        <linearGradient id="bar2Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#3FAA88" stopOpacity={0.85} />
+          <stop offset="100%" stopColor="#4FD1C5" stopOpacity={0.2} />
+        </linearGradient>
+      </defs>
+      
+      <CartesianGrid stroke="rgba(70, 29, 119, 0.05)" strokeDasharray="3 3" vertical={false} />
+      
+      <XAxis
+        dataKey="day"
+        stroke="#000000"
+        fontSize={9}
+        tickLine={false}
+        dy={8}
+        axisLine={false}
+      />
+      <YAxis
+        stroke="#000000"
+        fontSize={9}
+        axisLine={false}
+        tickLine={false}
+        domain={[0, "auto"]}
+      />
+      
+      <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(70, 29, 119, 0.02)" }} />
+      
+      <Legend
+        verticalAlign="bottom"
+        height={36}
+        iconType="circle"
+        fontSize={10}
+        wrapperStyle={{ paddingTop: "12px", fontSize: "10px", color: "#171717" }}
+      />
+
+      {/* LCE actual bar */}
+      <Bar
+        dataKey="LCE Actual (SdA)"
+        fill="url(#bar2Grad)"
+        name="LCE (SdA)"
+        radius={[3, 3, 0, 0]}
+        label={renderBar2Label}
+      />
+    </>
+  );
+
   return (
     <div className="grid grid-cols-1 gap-6 select-none">
       
@@ -153,69 +265,19 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
           </span>
         </div>
 
-        {/* Responsive chart container */}
-        <div className="w-full h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={chart1Data} margin={{ top: 35, right: 10, left: -20, bottom: 5 }}>
-              <defs>
-                {/* Gradient for bar glow */}
-                <linearGradient id="bar1Grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#461D77" stopOpacity={0.85} />
-                  <stop offset="100%" stopColor="#7177EC" stopOpacity={0.2} />
-                </linearGradient>
-              </defs>
-              
-              <CartesianGrid stroke="rgba(70, 29, 119, 0.05)" strokeDasharray="3 3" vertical={false} />
-              
-              <XAxis
-                dataKey="name"
-                stroke="#000000"
-                fontSize={9}
-                tickLine={false}
-                dy={8}
-                axisLine={false}
-                tickFormatter={(val) => val.split("-")[0]} // Just show day numbers to de-clutter
-              />
-              <YAxis
-                stroke="#000000"
-                fontSize={9}
-                axisLine={false}
-                tickLine={false}
-                domain={[0, "auto"]}
-              />
-              
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(70, 29, 119, 0.02)" }} />
-              
-              <Legend
-                verticalAlign="bottom"
-                height={36}
-                iconType="circle"
-                fontSize={10}
-                wrapperStyle={{ paddingTop: "12px", fontSize: "10px", color: "#171717" }}
-              />
-
-              {/* Realized trips / Vueltas Desp. Bar */}
-              <Bar
-                dataKey="Viajes Realizados (Vueltas Desp.)"
-                fill="url(#bar1Grad)"
-                name="Vueltas Desp."
-                radius={[3, 3, 0, 0]}
-                label={renderBar1Label}
-              />
-
-              {/* Programmed trips Target Line */}
-              <Line
-                type="monotone"
-                dataKey="Viajes Programados (Vueltas Prog.)"
-                stroke="#171717"
-                strokeWidth={1.5}
-                dot={{ r: 1.5, fill: "#171717", strokeWidth: 1 }}
-                activeDot={{ r: 3.5 }}
-                name="Vueltas Prog."
-                strokeDasharray="3 3"
-              />
+        {/* Responsive / Fixed chart container */}
+        <div className="w-full h-80 flex items-center justify-center overflow-hidden">
+          {isCapturing ? (
+            <ComposedChart width={1120} height={320} data={chart1Data} margin={{ top: 35, right: 35, left: -20, bottom: 5 }}>
+              {chart1Content}
             </ComposedChart>
-          </ResponsiveContainer>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={chart1Data} margin={{ top: 35, right: 35, left: -20, bottom: 5 }}>
+                {chart1Content}
+              </ComposedChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
 
@@ -235,56 +297,19 @@ export function DashboardCharts({ logs, selectedDate }: DashboardChartsProps) {
           </span>
         </div>
 
-        {/* Responsive chart container */}
-        <div className="w-full h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={chart2Data} margin={{ top: 35, right: 10, left: -20, bottom: 5 }}>
-              <defs>
-                {/* LCE actual bar fill gradient */}
-                <linearGradient id="bar2Grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#3FAA88" stopOpacity={0.85} />
-                  <stop offset="100%" stopColor="#4FD1C5" stopOpacity={0.2} />
-                </linearGradient>
-              </defs>
-              
-              <CartesianGrid stroke="rgba(70, 29, 119, 0.05)" strokeDasharray="3 3" vertical={false} />
-              
-              <XAxis
-                dataKey="day"
-                stroke="#000000"
-                fontSize={9}
-                tickLine={false}
-                dy={8}
-                axisLine={false}
-              />
-              <YAxis
-                stroke="#000000"
-                fontSize={9}
-                axisLine={false}
-                tickLine={false}
-                domain={[0, "auto"]}
-              />
-              
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(70, 29, 119, 0.02)" }} />
-              
-              <Legend
-                verticalAlign="bottom"
-                height={36}
-                iconType="circle"
-                fontSize={10}
-                wrapperStyle={{ paddingTop: "12px", fontSize: "10px", color: "#171717" }}
-              />
-
-              {/* LCE actual bar */}
-              <Bar
-                dataKey="LCE Actual (SdA)"
-                fill="url(#bar2Grad)"
-                name="LCE (SdA)"
-                radius={[3, 3, 0, 0]}
-                label={renderBar2Label}
-              />
+        {/* Responsive / Fixed chart container */}
+        <div className="w-full h-80 flex items-center justify-center overflow-hidden">
+          {isCapturing ? (
+            <ComposedChart width={1120} height={320} data={chart2Data} margin={{ top: 35, right: 35, left: -20, bottom: 5 }}>
+              {chart2Content}
             </ComposedChart>
-          </ResponsiveContainer>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={chart2Data} margin={{ top: 35, right: 35, left: -20, bottom: 5 }}>
+                {chart2Content}
+              </ComposedChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
 

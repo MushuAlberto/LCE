@@ -25,22 +25,31 @@ export function OtrosDatosTable({ summary }: OtrosDatosTableProps) {
     <div className="bg-white rounded-xl border border-nucleo/10 shadow-sm flex flex-col lg:flex-row overflow-hidden select-none">
       
       {/* Rotated Vertical Month Banner - Recreating the iconic widget sidebar from the image */}
-      <div className="bg-nucleo p-6 lg:w-28 flex flex-row lg:flex-col items-center justify-between lg:justify-center gap-4 border-b lg:border-b-0 lg:border-r border-nucleo/20 relative">
+      <div className="bg-nucleo p-4 lg:p-6 lg:w-28 flex flex-row lg:flex-col items-center justify-between lg:justify-center gap-4 border-b lg:border-b-0 lg:border-r border-nucleo/20 relative">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.05),transparent)] pointer-events-none" />
         
-        <span className="text-[10px] tracking-widest text-white/50 font-bold uppercase lg:mb-4">
-          Resumen
-        </span>
-        
-        {/* Large stylized rotated label */}
-        <div className="lg:rotate-270 lg:transform lg:my-6 transition-transform duration-300">
-          <span className="text-xl lg:text-3xl font-extrabold text-[#FAF5E6] capitalize tracking-wider flex items-center">
+        {/* Mobile representation (not rotated) */}
+        <div className="lg:hidden whitespace-nowrap">
+          <span className="text-xl font-extrabold text-[#FAF5E6] capitalize tracking-wider">
             {summary.mes}
           </span>
         </div>
 
-        <div className="flex gap-1 items-center bg-white/10 border border-white/20 px-2 py-1 rounded text-[10px] text-[#FAF5E6] font-mono font-bold mt-auto">
-          MTR
+        {/* Desktop representation (SVG vertical text, completely bulletproof for html2canvas and browser rendering) */}
+        <div className="hidden lg:block w-20 h-48">
+          <svg className="w-full h-full" viewBox="0 0 80 200">
+            <text
+              x="40"
+              y="100"
+              textAnchor="middle"
+              transform="rotate(-90 40 100)"
+              fill="#FAF5E6"
+              className="text-2xl font-black capitalize tracking-widest select-none"
+              style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+            >
+              {summary.mes}
+            </text>
+          </svg>
         </div>
       </div>
 

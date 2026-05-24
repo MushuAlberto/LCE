@@ -260,8 +260,8 @@ export default function App() {
 
             const clonedEl = clonedDoc.getElementById("dashboard-capture-area");
             if (clonedEl) {
-              // Add nice framing padding only for the downloaded high-resolution image
-              clonedEl.style.padding = "28px";
+              clonedEl.style.width = "1240px";
+              clonedEl.style.padding = "32px";
               clonedEl.style.borderRadius = "16px";
             }
           }
@@ -336,7 +336,10 @@ export default function App() {
         />
 
         {/* Captured Content Wrapper representing everything requested in the attached image */}
-        <div id="dashboard-capture-area" className="flex flex-col gap-6 bg-calido">
+        <div 
+          id="dashboard-capture-area" 
+          className={`flex flex-col gap-6 bg-calido transition-all ${isCapturing ? "w-[1240px] p-8 mx-auto" : "w-full"}`}
+        >
           {/* SECTION: Quick Status Overview Title */}
           <div className="flex flex-col gap-1 select-none border-l-2 border-nucleo pl-3">
             <span className="text-[10px] font-black tracking-[0.25em] text-[#3FAA88] uppercase">
@@ -357,7 +360,7 @@ export default function App() {
           <OtrosDatosTable summary={summary} />
 
           {/* Interactive Month Charts & Graphs */}
-          <DashboardCharts logs={logs} selectedDate={selectedDate} />
+          <DashboardCharts logs={logs} selectedDate={selectedDate} isCapturing={isCapturing} />
         </div>
 
         {/* Sticky Executive Footer with general helpful notes */}
