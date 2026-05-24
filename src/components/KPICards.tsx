@@ -51,7 +51,6 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
       
       {/* CARD 1: Programa Despacho (Toneladas) */}
       <div className="bg-white rounded-xl p-4 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-28 h-28 bg-nucleo/5 rounded-full blur-2xl group-hover:bg-nucleo/10 transition-all duration-300 pointer-events-none" />
         
         <div>
           <div className="flex justify-between items-start gap-2">
@@ -174,7 +173,6 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
 
       {/* CARD 2: Programa Despacho (Viajes) */}
       <div className="bg-white rounded-xl p-4 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-28 h-28 bg-nucleo/5 rounded-full blur-2xl group-hover:bg-nucleo/10 transition-all duration-300 pointer-events-none" />
         
         <div>
           <div className="flex justify-between items-start gap-2">
@@ -271,7 +269,6 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
 
       {/* CARD 3: Cumplimiento Mes en Curso (MTD Accums) */}
       <div className="bg-white rounded-xl p-4 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group xl:col-span-1">
-        <div className="absolute top-0 right-0 w-28 h-28 bg-nucleo/5 rounded-full blur-2xl group-hover:bg-nucleo/10 transition-all duration-300 pointer-events-none" />
         
         <div>
           <div className="flex justify-between items-start gap-2">
@@ -347,7 +344,6 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
 
       {/* CARD 4: LCE - Salar de Atacama (Circular Progress donut representation) */}
       <div className="bg-white rounded-xl p-4 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-nucleo/5 to-[#4FD1C5]/5 rounded-full blur-2xl group-hover:from-nucleo/10 group-hover:to-[#4FD1C5]/10 transition-all duration-500 pointer-events-none" />
         
         <div>
           {/* Card Header */}
@@ -365,11 +361,16 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
 
           {/* Combined Visual Centerpiece Gauge */}
           <div className="flex flex-col items-center justify-center relative my-2 h-24">
-            {/* Glowing background ring */}
-            <div className="absolute w-20 h-20 bg-gradient-to-tr from-nucleo/5 to-[#4FD1C5]/5 rounded-full blur-xl animate-pulse" />
             
             <div className="relative w-22 h-22 flex items-center justify-center">
               <svg viewBox="0 0 100 100" className="w-full h-full rotate-270 drop-shadow-sm">
+                <defs>
+                  <linearGradient id="donut-grad-premium" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#461D77" />
+                    <stop offset="40%" stopColor="#7177EC" />
+                    <stop offset="100%" stopColor="#3FAA88" />
+                  </linearGradient>
+                </defs>
                 {/* Secondary track for glow depth */}
                 <circle cx="50" cy="50" r="41" fill="transparent" stroke="rgba(70, 29, 119, 0.03)" strokeWidth="10" />
                 {/* Background Ring */}
@@ -424,17 +425,6 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
               </div>
             </div>
           </div>
-          
-          {/* Gradients definitions for donut */}
-          <svg width="0" height="0" className="absolute">
-            <defs>
-              <linearGradient id="donut-grad-premium" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#461D77" />
-                <stop offset="40%" stopColor="#7177EC" />
-                <stop offset="100%" stopColor="#3FAA88" />
-              </linearGradient>
-            </defs>
-          </svg>
         </div>
 
         {/* POZAS MONITOR & FOOTER STATUS */}
