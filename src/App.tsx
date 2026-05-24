@@ -105,6 +105,65 @@ export default function App() {
         return;
       }
       try {
+        // Regex to match oklch(...) and oklab(...) color values with up to one nested parentheses level
+        const oklchOklabRegex = /(oklch|oklab)\((?:[^()]+|\([^()]*\))*\)/gi;
+
+        // Custom parser to approximate oklch / oklab colors to standard rgb / hex
+        // so that the old CSS parser of html2canvas doesn't crash on modern Tailwind CSS v4 styles
+        const approximateOklch = (matchedStr: string): string => {
+          const cleaned = matchedStr.replace(/\s+/g, " ").trim().toLowerCase();
+          const match = cleaned.match(/(?:oklch|oklab)\(\s*([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)(?:\s*\/\s*([0-9.%]+))?\s*\)/i);
+          if (!match) {
+            return "rgba(120, 120, 120, 0.5)"; // Neutral fallback for variable-based oklch colors
+          }
+
+          const l = parseFloat(match[1]);
+          const c = parseFloat(match[2]);
+          const h = parseFloat(match[3]);
+          const alphaStr = match[4];
+          
+          let alpha = 1;
+          if (alphaStr) {
+            if (alphaStr.endsWith("%")) {
+              alpha = parseFloat(alphaStr) / 100;
+            } else {
+              alpha = parseFloat(alphaStr);
+            }
+          }
+
+          let hex = "#888888"; // standard neutral gray approximation
+          if (l >= 0.95) {
+            hex = "#f9fafb";
+          } else if (l <= 0.15) {
+            hex = "#111827";
+          } else if (c < 0.03) {
+            if (l > 0.8) hex = "#f3f4f6";
+            else if (l > 0.6) hex = "#d1d5db";
+            else if (l > 0.4) hex = "#9ca3af";
+            else hex = "#4b5563";
+          } else {
+            if (h >= 0 && h < 50) {
+              hex = l > 0.6 ? "#fda4af" : l > 0.4 ? "#f43f5e" : "#be123c";
+            } else if (h >= 50 && h < 110) {
+              hex = l > 0.75 ? "#fef08a" : l > 0.5 ? "#f97316" : "#c2410c";
+            } else if (h >= 110 && h < 200) {
+              hex = l > 0.6 ? "#86efac" : l > 0.4 ? "#22c55e" : "#15803d";
+            } else if (h >= 200 && h < 300) {
+              hex = l > 0.6 ? "#93c5fd" : l > 0.4 ? "#3b82f6" : "#1d4ed8";
+            } else {
+              hex = l > 0.6 ? "#d8b4fe" : l > 0.4 ? "#8b5cf6" : "#6d28d9";
+            }
+          }
+
+          if (alpha < 1) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+          }
+          return hex;
+        };
+
         const canvas = await html2canvas(element, {
           backgroundColor: "#FAF5E6", // Match --color-calido
           scale: 2.0, // Crisp image resolution without extra lag
@@ -112,6 +171,51 @@ export default function App() {
           logging: false,
           allowTaint: false, // Must be false or canvas.toDataURL fails with SecurityError
           onclone: (clonedDoc) => {
+            // Apply the oklch/oklab replacement fix to all style tags in the cloned document
+            clonedDoc.querySelectorAll("style").forEach((styleEl) => {
+              if (styleEl.textContent) {
+                styleEl.textContent = styleEl.textContent.replace(oklchOklabRegex, (m) => approximateOklch(m));
+              }
+            });
+
+            // Apply the oklch/oklab replacement fix to any inline styles
+            clonedDoc.querySelectorAll("[style]").forEach((el) => {
+              const styleAttr = el.getAttribute("style");
+              if (styleAttr) {
+                el.setAttribute("style", styleAttr.replace(oklchOklabRegex, (m) => approximateOklch(m)));
+              }
+            });
+
+            // Walk and sanitize all loaded sheets
+            try {
+              for (let i = 0; i < clonedDoc.styleSheets.length; i++) {
+                try {
+                  const sheet = clonedDoc.styleSheets[i] as CSSStyleSheet;
+                  const rules = sheet.cssRules || sheet.rules;
+                  if (!rules) continue;
+                  for (let j = rules.length - 1; j >= 0; j--) {
+                    const rule = rules[j];
+                    if (rule instanceof CSSStyleRule) {
+                      if (rule.cssText.includes("oklch") || rule.cssText.includes("oklab")) {
+                        for (let k = rule.style.length - 1; k >= 0; k--) {
+                          const propName = rule.style[k];
+                          const propVal = rule.style.getPropertyValue(propName);
+                          if (propVal.includes("oklch") || propVal.includes("oklab")) {
+                            const newVal = propVal.replace(oklchOklabRegex, (m) => approximateOklch(m));
+                            rule.style.setProperty(propName, newVal, rule.style.getPropertyPriority(propName));
+                          }
+                        }
+                      }
+                    }
+                  }
+                } catch (e) {
+                  // Ignore security boundary limitations on external stylesheets
+                }
+              }
+            } catch (e) {
+              // Ignore general stylesheet traversing limitations
+            }
+
             const clonedEl = clonedDoc.getElementById("dashboard-capture-area");
             if (clonedEl) {
               // Add nice framing padding only for the downloaded high-resolution image
