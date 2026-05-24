@@ -47,11 +47,11 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 select-none">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 select-none">
       
       {/* CARD 1: Programa Despacho (Toneladas) */}
-      <div className="bg-white rounded-xl p-5 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-nucleo/5 rounded-full blur-2xl group-hover:bg-nucleo/10 transition-all duration-300 pointer-events-none" />
+      <div className="bg-white rounded-xl p-4 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-28 h-28 bg-nucleo/5 rounded-full blur-2xl group-hover:bg-nucleo/10 transition-all duration-300 pointer-events-none" />
         
         <div>
           <div className="flex justify-between items-start gap-2">
@@ -63,7 +63,7 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
             </span>
           </div>
 
-          <div className="my-5 grid grid-cols-2 gap-4">
+          <div className="my-2.5 grid grid-cols-2 gap-4">
             <div>
               <p className="text-[10px] text-tecnico/50 font-medium">Programadas</p>
               <div className="flex items-baseline gap-1 mt-0.5">
@@ -85,11 +85,11 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
           </div>
 
           {/* TRUCK SVG WITH LIQUID brine level reflecting actual dispatch compliance */}
-          <div className="w-full h-32 my-3 bg-calido rounded-xl relative flex items-center justify-center p-2 overflow-hidden border border-nucleo/10">
+          <div className="w-full h-24 my-2.5 bg-calido rounded-xl relative flex items-center justify-center p-1 overflow-hidden border border-nucleo/10">
             {/* Ambient chemical background glow */}
             <div className="absolute -inset-1 opacity-5 bg-gradient-to-r from-nucleo to-litio blur-xl animate-pulse" />
             
-            <svg viewBox="0 0 160 70" className="w-full max-w-[220px] h-24 relative z-10">
+            <svg viewBox="0 0 160 70" className="w-full max-w-[200px] h-20 relative z-10">
               {/* Ground road line */}
               <line x1="5" y1="58" x2="155" y2="58" stroke="rgba(70, 29, 119, 0.15)" strokeWidth="1.5" strokeDasharray="3 3" />
               
@@ -154,7 +154,7 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
         </div>
 
         {/* COMPLIANCE PERCENTAGE */}
-        <div className="mt-4 pt-3 border-t border-nucleo/5 flex items-center justify-between">
+        <div className="mt-3 pt-2 border-t border-nucleo/5 flex items-center justify-between">
           <span className="text-[10px] text-tecnico/50 font-semibold uppercase flex items-center gap-1">
             <Percent className="w-3.5 h-3.5 text-nucleo" /> Cumplimiento Diario
           </span>
@@ -173,8 +173,8 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
       </div>
 
       {/* CARD 2: Programa Despacho (Viajes) */}
-      <div className="bg-white rounded-xl p-5 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-nucleo/5 rounded-full blur-2xl group-hover:bg-nucleo/10 transition-all duration-300 pointer-events-none" />
+      <div className="bg-white rounded-xl p-4 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-28 h-28 bg-nucleo/5 rounded-full blur-2xl group-hover:bg-nucleo/10 transition-all duration-300 pointer-events-none" />
         
         <div>
           <div className="flex justify-between items-start gap-2">
@@ -186,7 +186,7 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
             </span>
           </div>
 
-          <div className="my-5 grid grid-cols-2 gap-4">
+          <div className="my-2.5 grid grid-cols-2 gap-4">
             <div>
               <p className="text-[10px] text-tecnico/50 font-medium">Programados</p>
               <div className="flex items-baseline gap-1 mt-0.5">
@@ -208,7 +208,7 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
           </div>
 
           {/* COMPACT COMPARATIVE BAR CHART */}
-          <div className="w-full h-24 my-3 bg-calido rounded-xl border border-nucleo/10 p-2 flex items-center justify-center">
+          <div className="w-full h-20 my-2.5 bg-calido rounded-xl border border-nucleo/10 p-1 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={[
@@ -251,7 +251,7 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
         </div>
 
         {/* COMPLIANCE PERCENTAGE */}
-        <div className="mt-4 pt-3 border-t border-nucleo/5 flex items-center justify-between">
+        <div className="mt-3 pt-2 border-t border-nucleo/5 flex items-center justify-between">
           <span className="text-[10px] text-tecnico/50 font-semibold uppercase flex items-center gap-1">
             <Route className="w-3.5 h-3.5 text-nucleo" /> Vueltas Diarias
           </span>
@@ -270,8 +270,8 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
       </div>
 
       {/* CARD 3: Cumplimiento Mes en Curso (MTD Accums) */}
-      <div className="bg-white rounded-xl p-5 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group xl:col-span-1">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-nucleo/5 rounded-full blur-2xl group-hover:bg-nucleo/10 transition-all duration-300 pointer-events-none" />
+      <div className="bg-white rounded-xl p-4 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group xl:col-span-1">
+        <div className="absolute top-0 right-0 w-28 h-28 bg-nucleo/5 rounded-full blur-2xl group-hover:bg-nucleo/10 transition-all duration-300 pointer-events-none" />
         
         <div>
           <div className="flex justify-between items-start gap-2">
@@ -283,24 +283,24 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
             </span>
           </div>
 
-          <div className="my-[13px] space-y-3">
+          <div className="my-2.5 space-y-2">
             {/* Tonelaje Row */}
-            <div className="bg-calido p-2.5 rounded-lg border border-nucleo/5">
+            <div className="bg-calido p-2 rounded-lg border border-nucleo/0">
               <div className="flex justify-between text-[10px] text-tecnico/60 font-semibold">
                 <span>Tonelaje Acumulado</span>
                 <span className="text-tecnico font-mono font-bold">
                   {numFmt(summary.cumplimientoTonelaje, 0)}%
                 </span>
               </div>
-              <div className="flex justify-between items-baseline mt-1">
-                <span className="text-xs text-tecnico/40 font-mono">
+              <div className="flex justify-between items-baseline mt-0.5">
+                <span className="text-[10px] text-tecnico/40 font-mono">
                   {numFmt(summary.tonelajeProgramadoAcumulado, 0)} t
                 </span>
-                <span className="text-sm font-bold font-mono text-nucleo">
+                <span className="text-xs font-bold font-mono text-nucleo">
                   {numFmt(summary.tonelajeDespachadoAcumulado, 2)} t
                 </span>
               </div>
-              <div className="w-full bg-white h-1 rounded-full mt-1.5 overflow-hidden border border-nucleo/5">
+              <div className="w-full bg-white h-1 rounded-full mt-1 overflow-hidden border border-nucleo/5">
                 <div
                   className="h-full bg-nucleo rounded-full"
                   style={{ width: `${Math.min(100, summary.cumplimientoTonelaje)}%` }}
@@ -309,22 +309,22 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
             </div>
 
             {/* Viajes Row */}
-            <div className="bg-calido p-2.5 rounded-lg border border-nucleo/5">
+            <div className="bg-calido p-2 rounded-lg border border-nucleo/0">
               <div className="flex justify-between text-[10px] text-tecnico/60 font-semibold">
                 <span>Viajes Acumulados</span>
                 <span className="text-tecnico font-mono font-bold">
                   {numFmt(summary.cumplimientoViajes, 0)}%
                 </span>
               </div>
-              <div className="flex justify-between items-baseline mt-1">
-                <span className="text-xs text-tecnico/45 font-mono">
+              <div className="flex justify-between items-baseline mt-0.5">
+                <span className="text-[10px] text-tecnico/45 font-mono">
                   {intFmt(summary.viajesProgramadosAcumulados)} viajes
                 </span>
-                <span className="text-sm font-bold font-mono text-ionizado">
+                <span className="text-xs font-bold font-mono text-ionizado">
                   {intFmt(summary.viajesDespachadosAcumulados)} viajes
                 </span>
               </div>
-              <div className="w-full bg-white h-1 rounded-full mt-1.5 overflow-hidden border border-nucleo/5">
+              <div className="w-full bg-white h-1 rounded-full mt-1 overflow-hidden border border-nucleo/5">
                 <div
                   className="h-full bg-ionizado rounded-full"
                   style={{ width: `${Math.min(100, summary.cumplimientoViajes)}%` }}
@@ -335,7 +335,7 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
         </div>
 
         {/* CUMPLIMIENTO GLOBAL DE VIAJES */}
-        <div className="mt-2.5 pt-2 border-t border-nucleo/5 flex items-center justify-between">
+        <div className="mt-2 pt-2 border-t border-nucleo/5 flex items-center justify-between">
           <span className="text-[10px] text-tecnico/50 font-semibold uppercase flex items-center gap-1">
             <CalendarCheck className="w-3.5 h-3.5 text-nucleo" /> Estado Mensual
           </span>
@@ -346,8 +346,8 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
       </div>
 
       {/* CARD 4: LCE - Salar de Atacama (Circular Progress donut representation) */}
-      <div className="bg-white rounded-xl p-5 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-nucleo/5 to-[#4FD1C5]/5 rounded-full blur-2xl group-hover:from-nucleo/10 group-hover:to-[#4FD1C5]/10 transition-all duration-500 pointer-events-none" />
+      <div className="bg-white rounded-xl p-4 border border-nucleo/10 shadow-sm flex flex-col justify-between relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-nucleo/5 to-[#4FD1C5]/5 rounded-full blur-2xl group-hover:from-nucleo/10 group-hover:to-[#4FD1C5]/10 transition-all duration-500 pointer-events-none" />
         
         <div>
           {/* Card Header */}
@@ -364,11 +364,11 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
           </div>
 
           {/* Combined Visual Centerpiece Gauge */}
-          <div className="flex flex-col items-center justify-center relative my-5 h-28">
+          <div className="flex flex-col items-center justify-center relative my-2 h-24">
             {/* Glowing background ring */}
-            <div className="absolute w-24 h-24 bg-gradient-to-tr from-nucleo/5 to-[#4FD1C5]/5 rounded-full blur-xl animate-pulse" />
+            <div className="absolute w-20 h-20 bg-gradient-to-tr from-nucleo/5 to-[#4FD1C5]/5 rounded-full blur-xl animate-pulse" />
             
-            <div className="relative w-28 h-28 flex items-center justify-center">
+            <div className="relative w-22 h-22 flex items-center justify-center">
               <svg viewBox="0 0 100 100" className="w-full h-full rotate-270 drop-shadow-sm">
                 {/* Secondary track for glow depth */}
                 <circle cx="50" cy="50" r="41" fill="transparent" stroke="rgba(70, 29, 119, 0.03)" strokeWidth="10" />
@@ -390,10 +390,10 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
               </svg>
               {/* Inner compliance text label in donut center */}
               <div className="absolute inset-0 flex flex-col justify-center items-center">
-                <span className="text-2xl font-extrabold font-mono text-tecnico leading-none select-none tracking-tight">
+                <span className="text-xl font-extrabold font-mono text-tecnico leading-none select-none tracking-tight">
                   {numFmt(summary.lceCumplimiento, 0)}%
                 </span>
-                <span className="text-[7.5px] text-tecnico/45 uppercase font-bold tracking-widest mt-1">
+                <span className="text-[7px] text-tecnico/45 uppercase font-bold tracking-widest mt-0.5">
                   Meta LCE
                 </span>
               </div>
@@ -401,8 +401,8 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
           </div>
 
           {/* Premium Modular Bento Sub-Cards for detailed values */}
-          <div className="grid grid-cols-2 gap-2 mt-4">
-            <div className="bg-gradient-to-br from-calido/30 to-white p-2.5 rounded-lg border border-nucleo/5 shadow-[0_1px_2px_rgba(70,29,119,0.02)] relative overflow-hidden">
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div className="bg-gradient-to-br from-calido/30 to-white p-2 rounded-lg border border-nucleo/5 shadow-[0_1px_2px_rgba(70,29,119,0.02)] relative overflow-hidden">
               <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-nucleo/30" />
               <p className="text-[9px] text-tecnico/40 font-bold uppercase tracking-wider">Actual SdA</p>
               <div className="flex items-baseline gap-0.5 mt-0.5">
@@ -413,7 +413,7 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-calido/30 to-white p-2.5 rounded-lg border border-nucleo/5 shadow-[0_1px_2px_rgba(70,29,119,0.02)] relative overflow-hidden">
+            <div className="bg-gradient-to-br from-calido/30 to-white p-2 rounded-lg border border-nucleo/5 shadow-[0_1px_2px_rgba(70,29,119,0.02)] relative overflow-hidden">
               <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-tecnico/20" />
               <p className="text-[9px] text-tecnico/40 font-bold uppercase tracking-wider">Programado</p>
               <div className="flex items-baseline gap-0.5 mt-0.5">
@@ -438,7 +438,7 @@ export function KPICards({ currentLog, summary }: KPICardsProps) {
         </div>
 
         {/* POZAS MONITOR & FOOTER STATUS */}
-        <div className="mt-4 pt-3 border-t border-nucleo/5 flex items-center justify-between">
+        <div className="mt-3 pt-2 border-t border-nucleo/5 flex items-center justify-between">
           <span className="text-[9px] text-tecnico/50 font-semibold uppercase flex items-center gap-1.5 font-sans">
             <Layers className="w-3.5 h-3.5 text-nucleo" /> Nivel Pozas PQLC:
           </span>
