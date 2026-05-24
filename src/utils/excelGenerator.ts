@@ -373,6 +373,7 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
         // -------------------------------------------------------------
         let overrides: ParseResult["overrides"] = undefined;
         const quimicasSheetName = findSheetName(workbook, "Químicas");
+        const resumenSheetName = findSheetName(workbook, "Resumen");
         
         // Try combinations of "Base SLIT", "BLIT", and substring "slit"/"blit"
         let blitSheetName = findSheetName(workbook, "Base SLIT") || findSheetName(workbook, "BLIT");
@@ -383,7 +384,7 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
           });
         }
 
-        if (quimicasSheetName || blitSheetName) {
+        if (quimicasSheetName || blitSheetName || resumenSheetName) {
           overrides = {};
           if (quimicasSheetName) {
             const sh = workbook.Sheets[quimicasSheetName];
@@ -406,6 +407,16 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
             
             const lceM36 = getCellValue(sh, "M36");
             if (lceM36 !== undefined) overrides.lceActualTotal = lceM36;
+          }
+          if (resumenSheetName) {
+            const sh = workbook.Sheets[resumenSheetName];
+            const lceProgVal = getCellValue(sh, "F4") !== undefined ? getCellValue(sh, "F4") : 
+                              (getCellValue(sh, "G4") !== undefined ? getCellValue(sh, "G4") : 
+                              (getCellValue(sh, "H4") !== undefined ? getCellValue(sh, "H4") : 
+                              getCellValue(sh, "I4")));
+            if (lceProgVal !== undefined) {
+              overrides.lceProgramadoTotal = lceProgVal;
+            }
           }
         }
 
