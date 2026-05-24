@@ -95,20 +95,22 @@ export default function App() {
 
   const handleDownloadImage = () => {
     setIsCapturing(true);
+    setErrorNotice(null);
     // Let the DOM/render cycle align
     setTimeout(async () => {
       const element = document.getElementById("dashboard-capture-area");
       if (!element) {
         setIsCapturing(false);
+        setErrorNotice("No se pudo encontrar el área del tablero para la captura.");
         return;
       }
       try {
         const canvas = await html2canvas(element, {
           backgroundColor: "#FAF5E6", // Match --color-calido
-          scale: 2.5, // Crisp retina image resolution
+          scale: 2.0, // Crisp image resolution without extra lag
           useCORS: true,
           logging: false,
-          allowTaint: true,
+          allowTaint: false, // Must be false or canvas.toDataURL fails with SecurityError
           onclone: (clonedDoc) => {
             const clonedEl = clonedDoc.getElementById("dashboard-capture-area");
             if (clonedEl) {
@@ -123,13 +125,18 @@ export default function App() {
         const link = document.createElement("a");
         link.download = `NOVANDINO_Reporte_Despacho_${selectedDate}.png`;
         link.href = dataUrl;
+        
+        // Dynamic appending is extremely critical for reliable downloads inside iframe sandboxes
+        document.body.appendChild(link);
         link.click();
-      } catch (err) {
+        document.body.removeChild(link);
+      } catch (err: any) {
         console.error("Error al generar la imagen del tablero:", err);
+        setErrorNotice(`No se pudo descargar la imagen: ${err?.message || err}`);
       } finally {
         setIsCapturing(false);
       }
-    }, 200);
+    }, 250);
   };
 
   const handleResetData = () => {
