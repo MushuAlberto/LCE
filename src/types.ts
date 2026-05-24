@@ -44,6 +44,7 @@ export interface ExcelOverrides {
   cantidadCamiones?: number;
   productividadMes?: number;
   lceActualTotal?: number;
+  lceProgramadoTotal?: number;
 }
 
 export interface ParseResult {
