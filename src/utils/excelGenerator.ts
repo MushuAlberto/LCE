@@ -449,6 +449,7 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
           viajesProgramados: number;
           viajesRealizados: number;
           lceActual: number;
+          nivelPozasPqlc: string;
         }>();
         if (blitSheetName) {
           const blitSheet = workbook.Sheets[blitSheetName];
@@ -468,11 +469,13 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
               // Columna C: Viajes Programados (index 2)
               // Columna D: Tonelaje Despachado (index 3)
               // Columna E: Viajes Realizados (index 4)
+              // Columna J: Nivel Pozas PQLC (index 9)
               // Columna M: LCE (SdA) (index 12)
               const rawB = row.length > 1 ? row[1] : undefined;
               const rawC = row.length > 2 ? row[2] : undefined;
               const rawD = row.length > 3 ? row[3] : undefined;
               const rawE = row.length > 4 ? row[4] : undefined;
+              const rawJ = row.length > 9 ? row[9] : undefined;
               const rawM = row.length > 12 ? row[12] : undefined;
               
               const tonProg = rawB !== undefined && rawB !== null ? cleanCellValueToNumber(rawB) : 0;
@@ -481,13 +484,32 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
               const viajesReal = rawE !== undefined && rawE !== null ? Math.round(cleanCellValueToNumber(rawE)) : 0;
               const lceSda = rawM !== undefined && rawM !== null ? cleanCellValueToNumber(rawM) : undefined;
               
+              let nivelPozasVal = "S/D";
+              if (rawJ !== undefined && rawJ !== null) {
+                const jStr = String(rawJ).trim();
+                if (jStr) {
+                  if (typeof rawJ === "number") {
+                    if (rawJ > 0 && rawJ <= 1) {
+                      nivelPozasVal = `${Math.round(rawJ * 100)}%`;
+                    } else if (rawJ > 1 && rawJ <= 100) {
+                      nivelPozasVal = `${Math.round(rawJ)}%`;
+                    } else {
+                      nivelPozasVal = String(rawJ);
+                    }
+                  } else {
+                    nivelPozasVal = jStr;
+                  }
+                }
+              }
+              
               if (!isNaN(tonProg) || !isNaN(tonDesp) || !isNaN(viajesProg) || !isNaN(viajesReal)) {
                 slitData.set(dateStr, {
                   toneladasProgramadas: isNaN(tonProg) ? 0 : tonProg,
                   toneladasDespachadas: isNaN(tonDesp) ? 0 : tonDesp,
                   viajesProgramados: isNaN(viajesProg) ? 0 : viajesProg,
                   viajesRealizados: isNaN(viajesReal) ? 0 : viajesReal,
-                  lceActual: (lceSda !== undefined && !isNaN(lceSda)) ? lceSda : parseFloat((tonDesp * 0.3061).toFixed(2))
+                  lceActual: (lceSda !== undefined && !isNaN(lceSda)) ? lceSda : parseFloat((tonDesp * 0.3061).toFixed(2)),
+                  nivelPozasPqlc: nivelPozasVal
                 });
               }
             }
@@ -577,7 +599,7 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
             let m3Despachados = parseFloat(findValue(["m3despachados", "m3", "metroscubicos", "cubicmeters"], 0)) || 0;
             const lceProgramado = parseFloat(findValue(["lceprogramado", "lceprog", "lcetarget"], 845.18)) || 0;
             let lceActual = parseFloat(findValue(["lceactual", "lcesda", "lcereal"], 0)) || 0;
-            const nivelPozasPqlc = String(findValue(["nivelpozas", "pozas", "pqlc"], "S/D")).trim() || "S/D";
+            let nivelPozasPqlc = String(findValue(["nivelpozas", "pozas", "pqlc"], "S/D")).trim() || "S/D";
 
             // Determine voyages from standard headers or default
             let viajesProgramados = parseInt(findValue(["viajesprogramados", "viajesprog", "tripsprog"], 0)) || 0;
@@ -596,6 +618,7 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
                 m3Despachados = parseFloat((toneladasDespachadas / 1.26714).toFixed(2));
               }
               lceActual = slitOverride.lceActual;
+              nivelPozasPqlc = slitOverride.nivelPozasPqlc;
             } else if (viajesRealizados === 0 && toneladasDespachadas > 0) {
               viajesRealizados = Math.round(toneladasDespachadas / 29.01);
             }
@@ -626,7 +649,7 @@ export function parseUploadedExcel(file: File): Promise<ParseResult> {
               m3Despachados: parseFloat((rowData.toneladasDespachadas / 1.26714).toFixed(2)),
               lceProgramado: 845.18,
               lceActual: rowData.lceActual,
-              nivelPozasPqlc: "S/D"
+              nivelPozasPqlc: rowData.nivelPozasPqlc
             };
           });
         } else {
