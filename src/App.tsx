@@ -348,7 +348,7 @@ export default function App() {
             <div className="flex items-center justify-center w-full">
               <img 
                 src={logoImg} 
-                className="h-24 sm:h-28 w-auto object-contain" 
+                className="h-32 sm:h-36 w-auto object-contain" 
                 alt="Novandino Somos Litio, Somos Futuro" 
                 referrerPolicy="no-referrer"
               />
