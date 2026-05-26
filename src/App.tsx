@@ -341,11 +341,37 @@ export default function App() {
           className={`flex flex-col gap-6 bg-calido transition-all ${isCapturing ? "w-[1240px] p-8 mx-auto" : "w-full"}`}
         >
           {/* SECTION: Quick Status Overview Title */}
-          <div className="flex flex-col gap-1 select-none border-l-2 border-nucleo pl-3">
-            <span className="text-[10px] font-black tracking-[0.25em] text-[#3FAA88] uppercase">
-              NOVANDINO
-            </span>
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-3 select-none border-l-2 border-nucleo pl-3">
+            {/* High-Fidelity Professional Novandino Logo & Brand */}
+            <div className="flex items-center">
+              <svg className="h-11 w-auto max-w-[280px] sm:max-w-none md:h-12 flex-shrink-0" viewBox="0 0 450 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Stylized N Monogram Logo mark */}
+                <g fill="#461D77">
+                  {/* Left mathematical parallel ribbon */}
+                  <path d="M 28 15 L 10 55 L 22 85 L 35 85 L 19 55 L 37 15 Z" />
+                  {/* Right mathematical parallel ribbon */}
+                  <path d="M 48 15 L 30 55 L 42 85 L 55 85 L 39 55 L 57 15 Z" />
+                </g>
+                
+                {/* Brand Name custom lettering text (Novandino with Lambda & stylized i) */}
+                <text x="75" y="58" fill="#461D77" font-weight="900" font-size="38" letter-spacing="4.5" font-family="'Inter', 'Space Grotesk', system-ui, sans-serif">
+                  NOV<tspan font-family="system-ui, sans-serif" font-weight="400" font-size="40" dy="-2">Λ</tspan>ND<tspan font-family="'Inter', 'Space Grotesk', system-ui, sans-serif" font-size="38" dy="2">i</tspan>NO
+                </text>
+                
+                {/* Tagline text */}
+                <text x="75" y="86" fill="#461D77" font-weight="800" font-size="11.5" letter-spacing="5.5" font-family="'Inter', system-ui, sans-serif">
+                  SOMOS LITIO, SOMOS FUTURO
+                </text>
+                
+                {/* Rounded badge + Li */}
+                <rect x="365" y="22" width="58" height="42" rx="12" stroke="#461D77" stroke-width="3.5" fill="none" />
+                <text x="394" y="49" text-anchor="middle" fill="#461D77" font-weight="950" font-size="18" font-family="'Inter', system-ui, sans-serif">
+                  + Li
+                </text>
+              </svg>
+            </div>
+
+            <div className="flex items-center gap-2 mt-1">
               <BarChart3 className="w-4 h-4 text-nucleo" />
               <h2 className="text-xs font-bold tracking-[0.2em] text-nucleo uppercase">
                 Estadísticas e Indicadores Clave (KPI)
