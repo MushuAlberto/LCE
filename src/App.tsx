@@ -13,6 +13,8 @@ import { downloadExcelTemplate, parseUploadedExcel } from "./utils/excelGenerato
 import { BarChart3, ListFilter, AlertCircle, Sparkles } from "lucide-react";
 import { ExcelOverrides } from "./types";
 import html2canvas from "html2canvas";
+// @ts-ignore
+import logoImg from "../novandino.png";
 
 export default function App() {
   // Application states
@@ -342,33 +344,14 @@ export default function App() {
         >
           {/* SECTION: Quick Status Overview Title */}
           <div className="flex flex-col gap-3 select-none border-l-2 border-nucleo pl-3">
-            {/* High-Fidelity Professional Novandino Logo & Brand */}
+            {/* High-Fidelity Professional Novandino Logo Image */}
             <div className="flex items-center">
-              <svg className="h-11 w-auto max-w-[280px] sm:max-w-none md:h-12 flex-shrink-0" viewBox="0 0 450 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Stylized N Monogram Logo mark */}
-                <g fill="#461D77">
-                  {/* Left mathematical parallel ribbon */}
-                  <path d="M 28 15 L 10 55 L 22 85 L 35 85 L 19 55 L 37 15 Z" />
-                  {/* Right mathematical parallel ribbon */}
-                  <path d="M 48 15 L 30 55 L 42 85 L 55 85 L 39 55 L 57 15 Z" />
-                </g>
-                
-                {/* Brand Name custom lettering text (Novandino with Lambda & stylized i) */}
-                <text x="75" y="58" fill="#461D77" fontWeight="900" fontSize="38" letterSpacing="4.5" fontFamily="'Inter', 'Space Grotesk', system-ui, sans-serif">
-                  NOV<tspan fontFamily="system-ui, sans-serif" fontWeight="400" fontSize="40" dy="-2">Λ</tspan>ND<tspan fontFamily="'Inter', 'Space Grotesk', system-ui, sans-serif" fontSize="38" dy="2">i</tspan>NO
-                </text>
-                
-                {/* Tagline text */}
-                <text x="75" y="86" fill="#461D77" fontWeight="800" fontSize="11.5" letterSpacing="5.5" fontFamily="'Inter', system-ui, sans-serif">
-                  SOMOS LITIO, SOMOS FUTURO
-                </text>
-                
-                {/* Rounded badge + Li */}
-                <rect x="365" y="22" width="58" height="42" rx="12" stroke="#461D77" strokeWidth="3.5" fill="none" />
-                <text x="394" y="49" textAnchor="middle" fill="#461D77" fontWeight="950" fontSize="18" fontFamily="'Inter', system-ui, sans-serif">
-                  + Li
-                </text>
-              </svg>
+              <img 
+                src={logoImg} 
+                className="h-10 sm:h-12 w-auto object-contain" 
+                alt="Novandino Somos Litio, Somos Futuro" 
+                referrerPolicy="no-referrer"
+              />
             </div>
 
             <div className="flex items-center gap-2 mt-1">
