@@ -343,18 +343,35 @@ export default function App() {
           className={`flex flex-col gap-6 bg-calido transition-all ${isCapturing ? "w-[1240px] p-8 mx-auto" : "w-full"}`}
         >
           {/* SECTION: Quick Status Overview Title */}
-          <div className="flex flex-col gap-3 select-none border-l-2 border-nucleo pl-3">
+          <div className="flex flex-col gap-4 select-none items-center justify-center text-center">
             {/* High-Fidelity Professional Novandino Logo Image */}
-            <div className="flex items-center">
+            <div className="flex items-center justify-center w-full">
               <img 
                 src={logoImg} 
-                className="h-16 sm:h-20 w-auto object-contain" 
+                className="h-24 sm:h-28 w-auto object-contain" 
                 alt="Novandino Somos Litio, Somos Futuro" 
                 referrerPolicy="no-referrer"
               />
             </div>
 
-            <div className="flex items-center gap-2 mt-1">
+            {/* Custom Brand Header Text block matching user upload */}
+            <div className="flex flex-col items-center justify-center gap-1.5 mt-1 select-none">
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg md:text-xl font-sans tracking-wide leading-tight">
+                <span className="font-bold text-[#461D77]">DESPACHO DIARIO</span>
+                <span className="text-slate-300 font-light select-none">|</span>
+                <span className="font-light text-slate-500">CLORURO DE LITIO</span>
+              </div>
+              <div className="text-[9px] sm:text-[10px] md:text-[11px] font-semibold tracking-wider text-[#461D77] flex items-center gap-1.5">
+                <span>SUBGERENCIA LOGÍSTICA LITIO</span>
+                <span className="text-[7px] font-black text-slate-400 select-none">•</span>
+                <span>DESPACHO LITIO</span>
+              </div>
+              <div className="text-[7px] sm:text-[8px] font-medium tracking-[0.35em] text-slate-400 mt-0.5">
+                SALAR DE ATACAMA
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 mt-2">
               <BarChart3 className="w-4 h-4 text-nucleo" />
               <h2 className="text-xs font-bold tracking-[0.2em] text-nucleo uppercase">
                 Estadísticas e Indicadores Clave (KPI)
