@@ -354,18 +354,18 @@ export default function App() {
                 </g>
                 
                 {/* Brand Name custom lettering text (Novandino with Lambda & stylized i) */}
-                <text x="75" y="58" fill="#461D77" font-weight="900" font-size="38" letter-spacing="4.5" font-family="'Inter', 'Space Grotesk', system-ui, sans-serif">
-                  NOV<tspan font-family="system-ui, sans-serif" font-weight="400" font-size="40" dy="-2">Λ</tspan>ND<tspan font-family="'Inter', 'Space Grotesk', system-ui, sans-serif" font-size="38" dy="2">i</tspan>NO
+                <text x="75" y="58" fill="#461D77" fontWeight="900" fontSize="38" letterSpacing="4.5" fontFamily="'Inter', 'Space Grotesk', system-ui, sans-serif">
+                  NOV<tspan fontFamily="system-ui, sans-serif" fontWeight="400" fontSize="40" dy="-2">Λ</tspan>ND<tspan fontFamily="'Inter', 'Space Grotesk', system-ui, sans-serif" fontSize="38" dy="2">i</tspan>NO
                 </text>
                 
                 {/* Tagline text */}
-                <text x="75" y="86" fill="#461D77" font-weight="800" font-size="11.5" letter-spacing="5.5" font-family="'Inter', system-ui, sans-serif">
+                <text x="75" y="86" fill="#461D77" fontWeight="800" fontSize="11.5" letterSpacing="5.5" fontFamily="'Inter', system-ui, sans-serif">
                   SOMOS LITIO, SOMOS FUTURO
                 </text>
                 
                 {/* Rounded badge + Li */}
-                <rect x="365" y="22" width="58" height="42" rx="12" stroke="#461D77" stroke-width="3.5" fill="none" />
-                <text x="394" y="49" text-anchor="middle" fill="#461D77" font-weight="950" font-size="18" font-family="'Inter', system-ui, sans-serif">
+                <rect x="365" y="22" width="58" height="42" rx="12" stroke="#461D77" strokeWidth="3.5" fill="none" />
+                <text x="394" y="49" textAnchor="middle" fill="#461D77" fontWeight="950" fontSize="18" fontFamily="'Inter', system-ui, sans-serif">
                   + Li
                 </text>
               </svg>
